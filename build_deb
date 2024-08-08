@@ -1,0 +1,15 @@
+#!/bin/bash
+
+rm -rf deb
+
+mkdir deb
+
+mkdir -p deb/usr/local/bin
+mkdir -p deb/DEBIAN
+
+cp scripts/vt* deb/usr/local/bin/ -v
+cp other/control deb/DEBIAN/control -v
+
+dpkg-deb --build deb
+
+mv deb.deb vt-0.1-all.deb -v

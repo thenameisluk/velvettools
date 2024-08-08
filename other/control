@@ -1,0 +1,6 @@
+Package: velvet-tools
+Version: 0.1
+Maintainer: luk
+Architecture: all
+Depends: vboot-utils, u-boot-tools, xz-utils
+Description: tools automating creation/flashing of bootable images for chromebooks

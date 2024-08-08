@@ -1,0 +1,3 @@
+bash autocompletion :3
+hook to update initramfs
+specify .dtb files (example: sc7180-trogdor-lazor*.dtb inside "dtbs" file) to gain some extra space
