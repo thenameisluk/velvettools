@@ -1,0 +1,19 @@
+#!/bin/bash
+#makes partition not bootable
+
+source $(dirname $BASH_SOURCE)/vtcommon
+source $(dirname $BASH_SOURCE)/vtcommon-flash
+
+#imported from vtcommon
+need_root
+
+if [ $# == "1" ]; then
+    get_partid_kpart_and_pdisk_from_drive $1
+else
+    echo "you have to specify drive to disable"
+fi
+
+echo "Are you sure you want make ${kpart}${id} unbootable ?"
+need_confirmation
+
+cgpt add -i ${id} -S 0 -T 0 -P 0 /dev/${pdisk}

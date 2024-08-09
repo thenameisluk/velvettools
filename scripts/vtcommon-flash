@@ -1,0 +1,59 @@
+#!/bin/bash
+#common functionality for flash scripts
+
+get_kpart_and_pdisk(){
+    #getting where root is mounted from, /dev/mmcblk0p4 or /dev/sda4 or /dev/mapper/encrypted
+    root=$(findmnt -n -o SOURCE /)
+
+    #encrypted partitions are inside /dev/mapper/
+    if echo $root | grep -q "mapper"; then
+        rawname=$(echo $root | sed 's/\/dev\/mapper\///') #first we remove useless part
+        root=/dev/$(lsblk -no NAME --raw | grep -B1 $rawname | head -n 1) #then we get partition before encrypted on in lsblk
+    fi
+
+    #obtains the /dev/mmcblk1p or /dev/sda or similar
+    kpart=$(echo $root | sed 's/[0-9]*$//')
+
+    #obtains parent disk, since sometimes there is p it otherwise would be tricky
+    pdisk=$(lsblk -no PKNAME $root | head -n 1)
+}
+
+get_partid_kpart_and_pdisk_from_drive(){
+    lsblk -no PKNAME $1 > /dev/null 2> /dev/null
+
+    if [ "$?" != "0" ];then
+        echo "sorry i can't flash to $1"
+        exit
+    fi
+
+    pdisk=$(lsblk -no PKNAME $1 | head -n 1)
+
+    kpart=$(echo -n $1 | sed 's/[0-9]*$//')
+
+    id="${1//$kpart/}"
+}
+
+check_flashable_kver() {
+    if [ ! -e "/boot/vmlinux.kpart-initrd-${kver}" ]; then
+        echo "Error. kernel ${kver} is not flashable, try building it with vtbuild <version>"
+        echo "Note. you can list available kernel versions using \"vtlist\" command"
+        exit
+    fi
+}
+
+flashing_error(){
+    echo ""
+    echo "Warning. the image was likely to big to flash"
+    echo "have you tried putting"
+    echo ""
+    echo "COMPRESS=xz"
+    echo "XZ_OPT='-9 --check=crc32 –memlimit-compress=25%'"
+    echo ""
+    echo "in /etc/initramfs-tools/conf.d/compress ?"
+    echo ""
+    echo "or putting all the required dtb's inside /boot/dtbs file"
+    echo "\"vthelp dtbs\" for more details"
+    echo "Note. only do this if you know what you're doing"
+    echo ""
+    echo "then building image with vtbuild <version>"
+}

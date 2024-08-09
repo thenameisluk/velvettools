@@ -1,27 +1,11 @@
+#!/bin/bash
 #common functionality among velvet tools
-
-get_kpart_and_pdisk(){
-    #getting where root is mounted from, /dev/mmcblk0p4 or /dev/sda4 or /dev/mapper/encrypted
-    root=$(findmnt -n -o SOURCE /)
-
-    #encrypted partitions are inside /dev/mapper/
-    if echo $root | grep -q "mapper"; then
-        rawname=$(echo $root | sed 's/\/dev\/mapper\///') #first we remove useless part
-        root=/dev/$(lsblk -no NAME --raw | grep -B1 $rawname | head -n 1) #then we get partition before encrypted on in lsblk
-    fi
-
-    #obtains the /dev/mmcblk1p or /dev/sda or similar
-    kpart=$(echo $root | sed 's/.$//')
-
-    #obtains parent disk, since sometimes there is p it otherwise would be tricky
-    pdisk=$(lsblk -no PKNAME $root | head -n 1)
-}
 
 # makes sure we have root
 need_root() {
     if [ "$(whoami)" != "root" ]; then
         echo "This script must be ran as root."
-        exit 1
+        exit
     fi
 }
 
@@ -38,14 +22,6 @@ get_kver() {
     echo "kelner chosen ${kver}"
 }
 
-check_flashable_kver() {
-    if [ ! -e "/boot/vmlinux.kpart-initrd-${kver}" ]; then
-        echo "Error. kernel ${kver} is not flashable, try building it with vtbuild <version>"
-        echo "Note. you can list available kernel versions using \"vtlist\" command"
-        exit
-    fi
-}
-
 need_confirmation(){
     echo "[y/N]"
     read confirmation
@@ -53,6 +29,12 @@ need_confirmation(){
         echo "canceled"
         exit
     fi
+}
+
+get_y_or_n_answer(){
+    echo "[y/N]"
+    read answer
+    # add fix for capital letters and diffrent langueges?
 }
 
 save_pwd(){

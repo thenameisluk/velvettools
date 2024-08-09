@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#don't run vtbuild if command was ran by vtbuild
+if [ ! -e /build/norebuild ]; then
+  vtbuild $(cat /boot/to-update) noinitgen
+  rm /boot/to-update
+fi
+
+#just in case sb smart, ctrl+c out of vtbuild
+rm /build/norebuild

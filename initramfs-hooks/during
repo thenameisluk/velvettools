@@ -1,0 +1,3 @@
+#!/bin/bash
+#for whatever reason after initramfts update can't access that info or i'm reading env output wrong :3
+echo -n "$version" > /boot/to-update

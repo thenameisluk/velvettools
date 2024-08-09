@@ -1,2 +1,4 @@
+#!/bin/bash
+
 echo currently available kernel versions
 echo $(ls -1 /boot/Image-* | sed "s|/boot/Image-||g")

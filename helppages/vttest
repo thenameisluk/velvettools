@@ -1,0 +1,7 @@
+Usage vtflash <version> </dev/diskname>
+will flahs bootable image to second or specified partition
+and make it boot from it once
+
+if everything works and you want it permament use vtflash
+
+<optional>

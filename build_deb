@@ -4,11 +4,29 @@ rm -rf deb
 
 mkdir deb
 
+#deb structure
 mkdir -p deb/usr/local/bin
 mkdir -p deb/DEBIAN
+mkdir -p deb/etc/bash_completion.d
+mkdir -p deb/usr/share/velvettools/help
+mkdir -p deb/etc/initramfs-tools/hooks
+mkdir -p deb/etc/initramfs/post-update.d
 
-cp scripts/vt* deb/usr/local/bin/ -v
+#basic deb package info
 cp other/control deb/DEBIAN/control -v
+
+#main binaries (bash scripts)
+cp scripts/vt* deb/usr/local/bin/ -v
+
+#bash autocompletion
+cp bashcompletion/* deb/etc/bash_completion.d/ -v
+
+#help pages
+cp helppages/* deb/usr/share/velvettools/help/ -v
+
+#initramfs hooks
+cp initramfs-hooks/during deb/etc/initramfs-tools/hooks/velvet-build -v
+cp initramfs-hooks/after deb/etc/initramfs/post-update.d/velvet-build -v
 
 dpkg-deb --build deb
 

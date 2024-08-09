@@ -19,11 +19,22 @@ if [ ! -e "Image-${kver}" ]; then
   exit 1
 fi
 
+echo $2
+
 #it is better to regenerate initramfs everytime
-#if [ ! -e initrd.img-${kver} ]; then
-#  echo "initrd.img-${kver} seams to be missing, trying to generate"
+if [ ! -e initrd.img-${kver} ] | [ $2 != "noinitgen" ]; then
+  touch /boot/norebuild #prevents initramfs from running vtbuild again
+
+  if [ ! -e initrd.img-${kver} ] & [ $2 == "noinitgen" ]; then
+    echo "sorry but there is no initramft to use ;-;, i have to build one, wanne continue"
+    need_confirmation
+  fi
+
+  echo "initrd.img-${kver} seams to be missing, trying to generate"
   update-initramfs -c -k "${kver}"
-#fi
+
+  rm /boot/norebuild
+fi
 
 if [ ! -e "initrd.img-${kver}" ]; then
   echo "sorry. unable to generate one TwT"
@@ -33,12 +44,13 @@ fi
 if [ ! -e cmdline ]; then
   echo "cmdline seams to be missing"
   echo "Note. will create one for you"
-  echo "console=tty1 root=LABEL=rootemmc rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 quiet splash" > cmdline
+  # -n prevents echo from adding new line at the end
+  echo -n "console=tty1 root=LABEL=rootemmc rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 quiet splash" > cmdline
   
   #cbq requires additional cmdline
   if echo "$kver" | grep -q "cbq"; then
     echo "there is cbq"
-    echo " deferred_probe_timeout=30 clk_ignore_unused=1" >> cmdline
+    echo -n " deferred_probe_timeout=30 clk_ignore_unused=1" >> cmdline
   fi
 
 
@@ -64,11 +76,21 @@ dd if=/dev/zero of=bootloader.bin bs=512 count=1
 # - mt8: dtb-${kver}/mt8183-*.dtb
 # - cbq: dtb-${kver}/sc7180-trogdor-*.dtb
 # - generic: dtb-${kver}/*.dtb
-#Note. you can specufy only dtb for your specyfic device to reduce space
-#even further but lose portability. PLS BE CAREFUL, if you select wrong
-#one the device will likely no work
+#Note. if you have this script installed instead of modifying
+#it here you can specify dtbs for your system inside /boot/dtbs (file, not folder) 
+#like "sc7180-trogdor-*.dtb" or "sc7180-trogdor-r1.dtb" or "sc7180-trogdor-r1.dtb sc7180-trogdor-r1-lte.dtb"
+#btw. each dtb seams to add more or less 0.09 MiB
+#all available dtb's are located ad /boot/dtb-<version>
+#you can try to deduce dtb files for your system by running "vthelp dtbs"
 
-ls dtb-${kver}/*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb
+if [ ! -e "dtbs" ]; then
+  ls dtb-${kver}/*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb  
+else
+  echo "the dtbs picked :"
+  ls dtb-${kver}/$(cat dtbs)
+  ls dtb-${kver}/$(cat dtbs) | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb
+fi
+
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
 cp -v vmlinux.kpart "/boot/vmlinux.kpart-initrd-${kver}"
 
@@ -79,6 +101,7 @@ rm -f Image Image.lzma initrd.img.xz bootloader.bin kernel.itb vmlinux.kpart
 #final output
 
 #printing results
+echo image put inside /boot/vmlinux.kpart-initrd-${kver}
 echo ""
 echo "for single boot only testing:"
 echo ""

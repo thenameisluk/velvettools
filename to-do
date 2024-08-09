@@ -1,3 +1,11 @@
-bash autocompletion :3
-hook to update initramfs
-specify .dtb files (example: sc7180-trogdor-lazor*.dtb inside "dtbs" file) to gain some extra space
+(done)bash autocompletion :3
+-(done)vtbuild
+-(done)vtflash
+-(done)vttest
+-(done)vtdisable
+-(done)vthelp
+asking for root password?
+(done)hook to update initramfs
+(temporary only)specify test and flash partition
+(done)specify .dtb files (example: sc7180-trogdor-lazor*.dtb inside "dtbs" file) to gain some extra space
+(done)finish vthelp command

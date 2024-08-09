@@ -1,27 +1,31 @@
 #!/bin/bash
 
 source $(dirname $BASH_SOURCE)/vtcommon
+source $(dirname $BASH_SOURCE)/vtcommon-flash
 
 #imported from vtcommon
 need_root
+
 get_kver ${1}
 
 check_flashable_kver
 
-get_kpart_and_pdisk
+if [ $# == "2" ]; then
+    get_partid_kpart_and_pdisk_from_drive $2
+else
+    get_kpart_and_pdisk
+    id=1
+fi
 
-echo "Are you sure you want to flash image to ${kpart}1 ?"
+
+echo "Are you sure you want to flash image to ${kpart}${id} ?"
 need_confirmation
 
-dd if=/boot/vmlinux.kpart-initrd-${kver} of=${kpart}1
+dd if=/boot/vmlinux.kpart-initrd-${kver} of=${kpart}${id}
 
 if [ $? == "1" ]; then
-    echo
-    echo Warning. the image was likely to big to flash
-    echo have you put
-    echo
-    echo COMPRESS=xz
-    echo XZ_OPT='-9 --check=crc32 –memlimit-compress=25%'
-    echo
-    echo in /etc/initramfs-tools/conf.d/compress ?
+    flashing_error
+    exit
 fi
+
+cgpt add -i ${id} -S 1 -T 2 -P 10 /dev/${pdisk}

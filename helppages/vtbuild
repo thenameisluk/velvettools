@@ -1,0 +1,10 @@
+Usage vtbuild <vesion> <option>
+is used to build bootable deptcharge image
+specifying kernel version is optional
+
+it will also generate cmdline at /boot/cmdline if missing
+
+available options :
+noinitgen - will not generate new initramfs
+
+<optional>

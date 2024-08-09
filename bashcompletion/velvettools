@@ -1,0 +1,78 @@
+# /etc/bash_completion.d/velvettols
+
+get_available_kernel_versions(){
+    ls -1 /boot/Image-* | sed "s|/boot/Image-||g"
+}
+
+# vttest and vtflash
+_vt_flash_completion() {
+    local curr_arg="${COMP_WORDS[COMP_CWORD]}"
+
+    local options=""
+
+    case "$COMP_CWORD" in
+
+    "1")
+        options=$(get_available_kernel_versions)
+        ;;
+
+    "2")
+        options=$(ls -d /dev/*)
+        ;;
+    esac
+
+    COMPREPLY=($(compgen -W "$options" -- "$curr_arg"))
+}
+complete -F _vt_flash_completion vtflash
+complete -F _vt_flash_completion vttest
+
+#vtdisable
+_vt_disk_completion() {
+    local curr_arg="${COMP_WORDS[COMP_CWORD]}"
+
+    local options=""
+
+    if [ "$COMP_CWORD" == "1" ];then
+        options=$(ls -d /dev/*)
+    fi
+
+    COMPREPLY=($(compgen -W "$options" -- "$curr_arg"))
+}
+complete -F _vt_disk_completion vtdisable
+
+#vtbuild
+_vt_build_completion() {
+    local curr_arg="${COMP_WORDS[COMP_CWORD]}"
+
+    local options=""
+
+    case "$COMP_CWORD" in
+
+    "1")
+        options=$(get_available_kernel_versions)
+        ;;
+
+    "2")
+        options="noinitgen"
+        ;;
+    esac
+
+
+    COMPREPLY=($(compgen -W "$options" -- "$curr_arg"))
+}
+complete -F _vt_build_completion vtbuild
+
+#vthelp
+_vt_help_completion() {
+    local curr_arg="${COMP_WORDS[COMP_CWORD]}"
+
+    local options=""
+
+    if [ "$COMP_CWORD" == "1" ];then
+        options=$(ls /usr/share/velvettools/help)
+    fi
+
+    COMPREPLY=($(compgen -W "$options" -- "$curr_arg"))
+}
+
+complete -F _vt_help_completion vthelp

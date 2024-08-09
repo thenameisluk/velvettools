@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#to-add
+#command details
+#dtbs
+
+if [ "$#" != "1" ]; then
+    echo "Usage vthelp <page>"
+    echo "available pages :"
+    ls /usr/share/velvettools/help
+else
+    if [ ! -e "/usr/share/velvettools/help/$1" ]; then
+        echo "the page doesn't exit"
+        exit
+    fi
+
+    cat /usr/share/velvettools/help/$1
+    echo
+fi
