@@ -1,5 +1,5 @@
 # Velvet Tools
-## Set of tools/usefull scripts for generating chromebook images
+## Set of tools/usefull scripts for generating and flashing chromebook bootable kernel images
 
 - ```vtlist``` lists available kernel versions
 - ```vtbuild <version>``` builds a bootable image
