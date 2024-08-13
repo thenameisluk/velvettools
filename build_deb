@@ -1,4 +1,5 @@
 #!/bin/bash
+VERSION=0.2
 
 rm -rf deb
 
@@ -30,4 +31,4 @@ cp initramfs-hooks/after deb/etc/initramfs/post-update.d/velvet-build -v
 
 dpkg-deb --build deb
 
-mv deb.deb vt-0.1-all.deb -v
+mv deb.deb vt-0.2-all.deb -v
