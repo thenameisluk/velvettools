@@ -25,6 +25,7 @@ _vt_flash_completion() {
 }
 complete -F _vt_flash_completion vtflash
 complete -F _vt_flash_completion vttest
+complete -F _vt_flash_completion vtdisable
 
 #vtdisable
 _vt_disk_completion() {
