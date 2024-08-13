@@ -1,5 +1,5 @@
 Package: velvet-tools
-Version: 0.1
+Version: VERSION
 Maintainer: luk
 Architecture: all
 Depends: vboot-utils, u-boot-tools, xz-utils

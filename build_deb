@@ -15,6 +15,7 @@ mkdir -p deb/etc/initramfs/post-update.d
 
 #basic deb package info
 cp other/control deb/DEBIAN/control -v
+sed -i "s/VERSION/${VERSION}/g" deb/DEBIAN/control
 
 #main binaries (bash scripts)
 cp scripts/vt* deb/usr/local/bin/ -v
@@ -31,4 +32,4 @@ cp initramfs-hooks/after deb/etc/initramfs/post-update.d/velvet-build -v
 
 dpkg-deb --build deb
 
-mv deb.deb vt-0.2-all.deb -v
+mv deb.deb vt-${VERSION}-all.deb -v
