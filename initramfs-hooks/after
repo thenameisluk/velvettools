@@ -1,10 +1,17 @@
 #!/bin/bash
 
+unknown_error(){
+  echo WARNING. something went wrong while building the image pls be carefull while flashing it
+  exit 1
+}
+
 #don't run vtbuild if command was ran by vtbuild
-if [ ! -e /build/norebuild ]; then
-  vtbuild $(cat /boot/to-update) noinitgen
+if [ ! -e /boot/norebuild ]; then
+  /usr/local/bin/vtbuild $(cat /boot/to-update) noinitgen || unknown_error
   rm /boot/to-update
 fi
 
 #just in case sb smart, ctrl+c out of vtbuild
-rm /build/norebuild
+rm /boot/norebuild 2> /dev/null
+
+exit 0 #for whatever reason it otherwise exits with error one

@@ -14,3 +14,4 @@ config file
 -flash and test partition (auto|none|/dev/mmcblk1p1)
 -update-initramfs hook (y/n)
 -append root?
+better error handling (out of memory)

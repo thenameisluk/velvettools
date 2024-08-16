@@ -31,6 +31,11 @@ need_confirmation(){
     fi
 }
 
+out_of_memory(){
+    echo "ur /boot partition is out of memory" 
+    exit
+}
+
 get_y_or_n_answer(){
     echo "[y/N]"
     read answer

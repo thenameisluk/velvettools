@@ -19,13 +19,12 @@ if [ ! -e "Image-${kver}" ]; then
   exit 1
 fi
 
-echo $2
-
 #it is better to regenerate initramfs everytime
-if [ ! -e initrd.img-${kver} ] | [ $2 != "noinitgen" ]; then
+if [ ! -e initrd.img-${kver} ] | [ "$2" != "noinitgen" ]; then
+  
   touch /boot/norebuild #prevents initramfs from running vtbuild again
 
-  if [ ! -e initrd.img-${kver} ] & [ $2 == "noinitgen" ]; then
+  if [ ! -e initrd.img-${kver} ] & [ "$2" == "noinitgen" ]; then
     echo "sorry but there is no initramft to use ;-;, i have to build one, want to continue"
     need_confirmation
   fi
@@ -33,7 +32,7 @@ if [ ! -e initrd.img-${kver} ] | [ $2 != "noinitgen" ]; then
   echo "initrd.img-${kver} seams to be missing, trying to generate"
   update-initramfs -c -k "${kver}"
 
-  rm /boot/norebuild
+  rm /boot/norebuild 2> /dev/null
 fi
 
 if [ ! -e "initrd.img-${kver}" ]; then
@@ -59,16 +58,16 @@ if [ ! -e cmdline ]; then
 fi
 
 #generating required files
-cp -v "vmlinux.kpart-initrd-${kver}" "vmlinux.kpart-initrd-${kver}.old" 2> /dev/null
-cp "Image-${kver}" Image
-lzma -9 -z -f -k -v Image
-cp "initrd.img-${kver}" initrd.img.xz
+cp -v "vmlinux.kpart-initrd-${kver}" "vmlinux.kpart-initrd-${kver}.old" 2> /dev/null || out_of_memory
+cp "Image-${kver}" Image || out_of_memory
+lzma -9 -z -f -k -v Image || out_of_memory
+cp "initrd.img-${kver}" initrd.img.xz || out_of_memory
 
 #moved cmdline to seperate file to make it cleaner to edit
 # for cbq add: deferred_probe_timeout=30 clk_ignore_unused=1
 #echo "console=tty1 root=LABEL=rootemmc rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 quiet splash" > cmdline
 
-dd if=/dev/zero of=bootloader.bin bs=512 count=1
+dd if=/dev/zero of=bootloader.bin bs=512 count=1 || out_of_memory
 
 # adjust to dtb names here:
 # - cbg: dtb-${kver}/rk3399-gru-*.dtb
@@ -84,15 +83,15 @@ dd if=/dev/zero of=bootloader.bin bs=512 count=1
 #you can try to deduce dtb files for your system by running "vthelp dtbs"
 
 if [ ! -e "dtbs" ]; then
-  ls dtb-${kver}/*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb  
+  ls dtb-${kver}/*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb || out_of_memory
 else
   echo "the dtbs picked :"
   ls dtb-${kver}/$(cat dtbs)
-  ls dtb-${kver}/$(cat dtbs) | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb
+  ls dtb-${kver}/$(cat dtbs) | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb || out_of_memory
 fi
 
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
-cp -v vmlinux.kpart "/boot/vmlinux.kpart-initrd-${kver}"
+cp -v vmlinux.kpart "/boot/vmlinux.kpart-initrd-${kver}" || out_of_memory
 
 #cleanning up
 rm -f Image Image.lzma initrd.img.xz bootloader.bin kernel.itb vmlinux.kpart
