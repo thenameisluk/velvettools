@@ -19,7 +19,7 @@ get_kver() {
     fi
 
     # it's not like we can stupid proof every file
-    if [ ! -e "Image-${kver}" ]; then
+    if [ ! -e "/boot/Image-${kver}" ]; then
         echo "Image-${kver} seams to be missing"
         echo "ple ple ple your kelner version is likely wrong"
         exit 1
