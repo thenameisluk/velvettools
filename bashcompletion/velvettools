@@ -1,8 +1,36 @@
+#!/bin/bash
 # /etc/bash_completion.d/velvettols
 
 get_available_kernel_versions(){
     ls -1 /boot/Image-* | sed "s|/boot/Image-||g"
 }
+
+# vtpack
+
+_vt_pack_completion() {
+    local curr_arg="${COMP_WORDS[COMP_CWORD]}"
+
+    local options=""
+
+    case "$COMP_CWORD" in
+
+    "1")
+        options="deb targz"
+        ;;
+
+    "2")
+        options=$(get_available_kernel_versions)
+        ;;
+    "3")
+        if [ "${COMP_WORDS[1]}" == "deb" ];then
+            options=$(logname)
+        fi
+        ;;
+    esac
+
+    COMPREPLY=($(compgen -W "$options" -- "$curr_arg"))
+}
+complete -F _vt_pack_completion vtpack
 
 # vttest and vtflash
 _vt_flash_completion() {

@@ -10,12 +10,11 @@ need_root() {
 }
 
 get_kver() {
-    if [ "$#" != "1" ]; then
+    if [ "$1" == "" ]; then
         echo "Note. no kelner specified, going with current kelner"
         kver=$(uname -r)
-    fi
-
-    if [ "$#" == "1" ]; then
+    else
+        #kernel presence check would be nice :3
         kver=${1}
     fi
 

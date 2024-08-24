@@ -1,0 +1,64 @@
+#!/bin/bash
+#vtpack deb <version> <maintainer>
+#vtpack targz <version>
+
+source $(dirname $BASH_SOURCE)/vtcommon
+
+make_deb(){
+
+    mkdir linux-${kver}
+    mkdir -p linux-${kver}/boot
+    mkdir -p linux-${kver}/DEBIAN
+    mkdir -p linux-${kver}/lib/modules
+
+
+    cp -r -v /boot/Image-${kver} linux-${kver}/boot/Image-${kver}
+    cp -r -v /boot/System.map-${kver} linux-${kver}/boot/System.map-${kver}
+    cp -r -v /boot/config-${kver} linux-${kver}/boot/config-${kver}
+    cp -r -v /boot/dtb-${kver} linux-${kver}/boot/dtb-${kver}
+    cp -r -v /boot/initrd.img-${kver} linux-${kver}/boot/initrd.img-${kver}
+    cp -r -v /boot/vmlinux.kpart-${kver} linux-${kver}/boot/vmlinux.kpart-${kver}
+    cp -r -v /lib/modules/${kver} linux-${kver}/lib/modules/${kver}
+
+    echo "Package: linux-${kver}" >> linux-${kver}/DEBIAN/control
+    echo "Version: ${kver}" >> linux-${kver}/DEBIAN/control
+    echo "Architecture: $(dpkg --print-architecture)" >> linux-${kver}/DEBIAN/control
+    echo "Depends: velvet-tools" >> linux-${kver}/DEBIAN/control
+    #logname gives the username even under sudo
+    echo "Maintainer: $1" >> linux-${kver}/DEBIAN/control
+    echo "Description: kelner ${kver} package" >> linux-${kver}/DEBIAN/control
+
+    echo "this might take a while, be patient"
+    dpkg --build linux-${kver}
+
+    rm -rf linux-${kver}echo "maintainer specified: $1"
+
+    echo "maintainer specified: $1"
+}
+
+make_targz(){
+    #lol 10+ lines vs oneliner :3
+    tar cvzf "/compile/source/linux-stable-cbq/${kver}.tar.gz" "/boot/Image-${kver}" "/boot/System.map-${kver}" "/boot/config-${kver}" "/boot/dtb-${kver}" "/boot/initrd.img-${kver}" "/boot/vmlinux.kpart-${kver}" "/lib/modules/${kver}"
+}
+
+if [ "$#" == "0" ];then
+    echo "what do you even want me to build???"
+    echo "vtpack deb <version> <maintainer>"
+    echo "vtpack targz <version>"
+fi
+
+get_kver "$2"
+
+if [ "$1" == "deb" ];then 
+    echo "doing deb"
+    if [ "$3" != "" ];then
+        make_deb "$3"
+    else
+        make_deb "$(logname)"
+    fi
+fi
+
+if [ "$1" == "targz" ];then 
+    echo "doing tar.gz"
+    make_targz
+fi

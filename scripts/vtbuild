@@ -20,11 +20,11 @@ if [ ! -e "Image-${kver}" ]; then
 fi
 
 #it is better to regenerate initramfs everytime
-if [ ! -e initrd.img-${kver} ] | [ "$2" != "noinitgen" ]; then
+if [ ! -e initrd.img-${kver} ] || [ "$2" != "noinitgen" ]; then
   
   touch /boot/norebuild #prevents initramfs from running vtbuild again
 
-  if [ ! -e initrd.img-${kver} ] & [ "$2" == "noinitgen" ]; then
+  if [ ! -e initrd.img-${kver} ] && [ "$2" == "noinitgen" ]; then
     echo "sorry but there is no initramft to use ;-;, i have to build one, want to continue"
     need_confirmation
   fi
