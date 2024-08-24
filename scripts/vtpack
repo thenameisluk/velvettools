@@ -38,7 +38,7 @@ make_deb(){
 
 make_targz(){
     #lol 10+ lines vs oneliner :3
-    tar cvzf "/compile/source/linux-stable-cbq/${kver}.tar.gz" "/boot/Image-${kver}" "/boot/System.map-${kver}" "/boot/config-${kver}" "/boot/dtb-${kver}" "/boot/initrd.img-${kver}" "/boot/vmlinux.kpart-${kver}" "/lib/modules/${kver}"
+    tar cvzf "${kver}.tar.gz" "/boot/Image-${kver}" "/boot/System.map-${kver}" "/boot/config-${kver}" "/boot/dtb-${kver}" "/boot/initrd.img-${kver}" "/boot/vmlinux.kpart-${kver}" "/lib/modules/${kver}"
 }
 
 if [ "$#" == "0" ];then
