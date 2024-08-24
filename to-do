@@ -3,7 +3,8 @@
 -(done)vtflash
 -(done)vttest
 -(done)vtdisable
--(done)vthelp
+-(done)vtpack
+-(done)vtlist
 
 asking for root password?
 (done)hook to update initramfs
@@ -18,4 +19,4 @@ config file
 better error handling (out of memory, ...)
 (done)vtpackage (for packaging the kernel into deb/tar.gz)
 (impossible)source bashcompletion after install - https://unix.stackexchange.com/questions/527541/update-bash-completion-automatically-when-installing-package
-kernel presence check (vtcommon)
+(done)kernel presence check (vtcommon)

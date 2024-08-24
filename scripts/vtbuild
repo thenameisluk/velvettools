@@ -11,14 +11,6 @@ cd /boot || exit
 # choosing kelner version
 get_kver ${1}
 
-#checking presence of the kelner
-
-if [ ! -e "Image-${kver}" ]; then
-  echo "Image-${kver} seams to be missing"
-  echo "this kelner version doesn't seam to be present"
-  exit 1
-fi
-
 #it is better to regenerate initramfs everytime
 if [ ! -e initrd.img-${kver} ] || [ "$2" != "noinitgen" ]; then
   

@@ -7,5 +7,7 @@
 - ```vttest <version> </dev/diskname>``` flashes the image for testing
 - ```vtdisable </dev/diskname>``` makes partiotion unbootable
 - ```vthelp <page>``` shows helpful info scripts related things
+- ```vtpack deb <version> <maintainer>``` makes you cool kelner.deb
+- ```vtpack targz <version>``` packs kelner very nicely into tar.g
 
 ```<optional>```

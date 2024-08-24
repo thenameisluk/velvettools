@@ -18,6 +18,13 @@ get_kver() {
         kver=${1}
     fi
 
+    # it's not like we can stupid proof every file
+    if [ ! -e "Image-${kver}" ]; then
+        echo "Image-${kver} seams to be missing"
+        echo "ple ple ple your kelner version is likely wrong"
+        exit 1
+    fi
+
     echo "kelner chosen ${kver}"
 }
 
