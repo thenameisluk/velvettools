@@ -50,7 +50,9 @@ if [ ! -e cmdline ]; then
 fi
 
 #generating required files
-cp -v "vmlinux.kpart-initrd-${kver}" "vmlinux.kpart-initrd-${kver}.old" 2> /dev/null || out_of_memory
+if [ ! -e "vmlinux.kpart-initrd-${kver}" ]; then #if it's not present the command would throw out of memory error
+  cp -v "vmlinux.kpart-initrd-${kver}" "vmlinux.kpart-initrd-${kver}.old" 2> /dev/null || out_of_memory
+fi
 cp "Image-${kver}" Image || out_of_memory
 lzma -9 -z -f -k -v Image || out_of_memory
 cp "initrd.img-${kver}" initrd.img.xz || out_of_memory
