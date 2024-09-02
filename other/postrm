@@ -1,0 +1,4 @@
+#!/bin/bash
+rm /etc/initramfs-tools/hooks/velvet-build -v
+rm /etc/initramfs/post-update.d/velvet-build -v
+rm /etc/bash_completion.d/velvettools -v

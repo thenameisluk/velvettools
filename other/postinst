@@ -1,0 +1,10 @@
+#!/bin/bash
+mkdir -p /etc/initramfs-tools/hooks
+mkdir -p /etc/initramfs/post-update.d
+mkdir -p /etc/bash_completion.d
+
+share=/usr/share/velvettools
+
+cp ${share}/hooks/during /etc/initramfs-tools/hooks/velvet-build -v
+cp ${share}/hooks/after /etc/initramfs/post-update.d/velvet-build -v
+cp ${share}/bash/velvettools /etc/bash_completion.d/velvettools -v

@@ -15,7 +15,7 @@ _vt_pack_completion() {
     case "$COMP_CWORD" in
 
     "1")
-        options="deb targz"
+        options="deb targz dir"
         ;;
 
     "2")

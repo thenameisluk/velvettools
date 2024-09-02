@@ -4,8 +4,7 @@
 
 source $(dirname $BASH_SOURCE)/vtcommon
 
-make_deb(){
-
+make_dir(){
     mkdir linux-${kver}
     mkdir -p linux-${kver}/boot
     mkdir -p linux-${kver}/DEBIAN
@@ -19,6 +18,10 @@ make_deb(){
     cp -r -v /boot/initrd.img-${kver} linux-${kver}/boot/initrd.img-${kver}
     cp -r -v /boot/vmlinux.kpart-${kver} linux-${kver}/boot/vmlinux.kpart-${kver}
     cp -r -v /lib/modules/${kver} linux-${kver}/lib/modules/${kver}
+}
+
+make_deb(){
+    make_dir
 
     echo "Package: linux-${kver}" >> linux-${kver}/DEBIAN/control
     echo "Version: ${kver}" >> linux-${kver}/DEBIAN/control
@@ -31,7 +34,7 @@ make_deb(){
     echo "this might take a while, be patient"
     dpkg --build linux-${kver}
 
-    rm -rf linux-${kver}echo "maintainer specified: $1"
+    rm -rf linux-${kver}
 
     echo "maintainer specified: $1"
 }
@@ -61,4 +64,9 @@ fi
 if [ "$1" == "targz" ];then 
     echo "doing tar.gz"
     make_targz
+fi
+
+if [ "$1" == "dir" ];then 
+    echo "doing dir"
+    make_dir
 fi

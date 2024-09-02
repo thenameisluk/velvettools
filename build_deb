@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.4
+VERSION=0.5
 
 rm -rf deb
 
@@ -10,25 +10,29 @@ mkdir -p deb/usr/local/bin
 mkdir -p deb/DEBIAN
 mkdir -p deb/etc/bash_completion.d
 mkdir -p deb/usr/share/velvettools/help
+mkdir -p deb/usr/share/velvettools/hooks
+mkdir -p deb/usr/share/velvettools/bash
 mkdir -p deb/etc/initramfs-tools/hooks
 mkdir -p deb/etc/initramfs/post-update.d
 
 #basic deb package info
 cp other/control deb/DEBIAN/control -v
+cp other/postinst deb/DEBIAN/postinst -v
+cp other/postrm deb/DEBIAN/postrm -v
 sed -i "s/VERSION/${VERSION}/g" deb/DEBIAN/control
 
 #main binaries (bash scripts)
 cp scripts/vt* deb/usr/local/bin/ -v
 
 #bash autocompletion
-cp bashcompletion/* deb/etc/bash_completion.d/ -v
+cp bashcompletion/velvettools deb/usr/share/velvettools/bash/velvettools -v
 
 #help pages
 cp helppages/* deb/usr/share/velvettools/help/ -v
 
 #initramfs hooks
-cp initramfs-hooks/during deb/etc/initramfs-tools/hooks/velvet-build -v
-cp initramfs-hooks/after deb/etc/initramfs/post-update.d/velvet-build -v
+cp initramfs-hooks/during deb/usr/share/velvettools/hooks/during -v
+cp initramfs-hooks/after deb/usr/share/velvettools/hooks/after -v
 
 dpkg-deb --build deb
 

@@ -1,5 +1,6 @@
 vtpack deb <version> <maintainer>
 vtpack targz <version>
+vtpack dir <version>
 
 packs your kelner into tar.gz or deb
 
