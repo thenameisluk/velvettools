@@ -12,10 +12,11 @@ asking for root password?
 (done)specify .dtb files (example: sc7180-trogdor-lazor*.dtb inside "dtbs" file) to gain some extra space
 (done)finish vthelp command
 config file
--notinitgen (y/n)
 -flash and test partition (auto|none|/dev/mmcblk1p1) (in case autodetection malfunctions for whatever reason)
 -update-initramfs hook (y/n)
+-auto flash
 -append root partition?
+auto new kernel test ^ (when auto flash)
 better error handling (out of memory, ...)
 (done)vtpackage (for packaging the kernel into deb/tar.gz)
 (impossible)source bashcompletion after install - https://unix.stackexchange.com/questions/527541/update-bash-completion-automatically-when-installing-package
