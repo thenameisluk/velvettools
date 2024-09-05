@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.5.1
+VERSION=0.5.2
 RELEASENUMBER=1 #only increse temporary if fix touches only deb/DEBIAN
 
 rm -rf deb
@@ -38,4 +38,4 @@ cp initramfs-hooks/after deb/usr/share/velvettools/hooks/after -v
 dpkg-deb --build deb
 
 #<package-name>_<version>-<release-number>_<architecture>
-mv deb.deb velvettools-${VERSION}-${RELEASENUMBER}-all.deb -v
+mv deb.deb velvettools-${VERSION}-${RELEASENUMBER}_all.deb -v
