@@ -2,3 +2,14 @@
 #checks for succesful boot
 source $(dirname $BASH_SOURCE)/vtcommon
 
+need_root
+
+if [ ! -f /etc/velvettools/testing ];then
+    echo nothing to check
+fi
+
+if [ "$(cat /etc/velvettools/testing)" == "$(uname -r)" ];then
+    vtflash $(uname -r) yes
+fi
+
+rm /etc/velvettools/testing

@@ -10,21 +10,11 @@ get_kver ${1}
 
 check_flashable_kver
 
-if [ $# == "2" ]; then
-    get_partid_kpart_and_pdisk_from_drive $2
-else
-    get_kpart_and_pdisk
-    id=1
-fi
+id=2
+load_config
+part=$main_part
 
-echo "Are you sure you want to flash image to ${kpart}${id} ?"
-need_confirmation
-
-dd if=/boot/vmlinux.kpart-initrd-${kver} of=${kpart}${id}
-
-if [ $? == "1" ]; then
-    flashing_error
-    exit
-fi
+echo flashing test partition
+flash_procedure "$1" "$2"
 
 cgpt add -i ${id} -S 0 -T 1 -P 15 /dev/${pdisk}

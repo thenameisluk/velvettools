@@ -1,4 +1,8 @@
 #!/bin/bash
+source /etc/velvettools/config
+if [ "$init_gen_hook" != "y" ];then
+    exit 0
+fi
 
 unknown_error(){
   echo WARNING. something went wrong while building the image pls be carefull while flashing it
@@ -6,7 +10,7 @@ unknown_error(){
 }
 
 #don't run vtbuild if command was ran by vtbuild
-if [ ! -e /boot/norebuild ]; then
+if [ ! -f /boot/norebuild ]; then
   /usr/local/bin/vtbuild $(cat /boot/to-update) noinitgen || unknown_error
   rm /boot/to-update
 fi

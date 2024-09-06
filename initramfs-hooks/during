@@ -1,3 +1,8 @@
 #!/bin/bash
 #for whatever reason after initramfts update can't access that info or i'm reading env output wrong :3
+source /etc/velvettools/config
+if [ "$init_gen_hook" != "y" ];then
+    exit 0
+fi
+
 echo -n "$version" > /boot/to-update

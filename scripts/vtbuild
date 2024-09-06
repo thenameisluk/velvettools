@@ -110,3 +110,18 @@ restor_pwd
 
 #auto flashing
 load_config
+
+if [ "$flash" == "auto" ]; then
+  echo automatic flashing
+  if [ "$kver" == "$(uname -r)" ];then
+    vtflash $kver yes
+  else
+    vttest $kver yes
+    echo the kelner will be permamently flashed after successful boot
+    echo to prevent it remove /etc/velvettools/testing
+    echo -n $kver > /etc/velvettools/testing
+  fi
+elif [ "$flash" == "forced" ];then
+  echo forced flashing
+  vtflash $kver yes
+fi

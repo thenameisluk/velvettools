@@ -67,7 +67,7 @@ default_config(){
 
 load_config(){
     if [ ! -f /etc/velvettools/config ]; then
-        default_config()
+        default_config
         return
     fi
 

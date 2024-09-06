@@ -2,6 +2,7 @@
 #common functionality for flash scripts
 
 get_kpart_and_pdisk(){
+
     #getting where root is mounted from, /dev/mmcblk0p4 or /dev/sda4 or /dev/mapper/encrypted
     root=$(findmnt -n -o SOURCE /)
 
@@ -31,6 +32,37 @@ get_partid_kpart_and_pdisk_from_drive(){
     kpart=$(echo -n $1 | sed 's/[0-9]*$//')
 
     id="${1//$kpart/}"
+}
+
+flash_procedure(){
+    if [ "$#" == "2" ] && [ "${2}" != "yes" ]; then
+        get_partid_kpart_and_pdisk_from_drive $2
+    else
+        load_config
+
+        if [ "$part" == "auto" ]; then
+            get_kpart_and_pdisk $part
+        elif [ "$part" == "none" ]; then
+            echo "partition set to none, can't flash"
+            exit
+        else
+            get_partid_kpart_and_pdisk_from_drive $part
+        fi
+    fi
+
+    if [ "${2}" == "yes" ];then
+        echo "flashing image to ${kpart}${id}"
+    else
+        echo "Are you sure you want to flash image to ${kpart}${id} ?"
+        need_confirmation
+    fi
+
+    dd if=/boot/vmlinux.kpart-initrd-${kver} of=${kpart}${id}
+
+    if [ $? == "1" ]; then
+        flashing_error
+        exit
+    fi
 }
 
 check_flashable_kver() {
