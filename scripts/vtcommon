@@ -57,3 +57,35 @@ restor_pwd(){
         cd $oldpwd
     fi
 }
+
+default_config(){
+    flash=auto
+    main_part=auto
+    test_part=auto
+    init_gen_hook=y
+}
+
+load_config(){
+    if [ ! -f /etc/velvettools/config ]; then
+        default_config()
+        return
+    fi
+
+    source /etc/velvettools/config
+
+    if [ "$flash" == "" ]; then
+        flash=auto
+    fi
+
+    if [ "$main_part" == "" ]; then
+        main_part=auto
+    fi
+
+    if [ "$test_part" == "" ]; then
+        test_part=auto
+    fi
+
+    if [ "$init_gen_hook" == "" ]; then
+        init_gen_hook=y
+    fi
+}

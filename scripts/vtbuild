@@ -107,3 +107,6 @@ echo ""
 
 #returns to previous directory
 restor_pwd
+
+#auto flashing
+load_config

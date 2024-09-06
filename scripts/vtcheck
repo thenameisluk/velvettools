@@ -1,0 +1,4 @@
+#!/bin/bash
+#checks for succesful boot
+source $(dirname $BASH_SOURCE)/vtcommon
+

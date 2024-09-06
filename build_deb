@@ -10,6 +10,7 @@ mkdir deb
 mkdir -p deb/usr/local/bin
 mkdir -p deb/DEBIAN
 mkdir -p deb/etc/bash_completion.d
+mkdir -p deb/etc/velvettools
 mkdir -p deb/usr/share/velvettools/help
 mkdir -p deb/usr/share/velvettools/hooks
 mkdir -p deb/usr/share/velvettools/bash
@@ -34,6 +35,9 @@ cp helppages/* deb/usr/share/velvettools/help/ -v
 #initramfs hooks
 cp initramfs-hooks/during deb/usr/share/velvettools/hooks/during -v
 cp initramfs-hooks/after deb/usr/share/velvettools/hooks/after -v
+
+#config
+cp other/config deb/etc/velvettools/config -v
 
 dpkg-deb --build deb
 

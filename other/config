@@ -1,0 +1,22 @@
+#flashed the kelner if the version is same as current one, and tests it then flashes it after succesful boot
+flash=auto
+#simply flashes the kelner to the main partition
+#flash=forced
+#no flashing occures automatically
+#flash=manual
+
+#detected by script
+main_part=auto
+#specify the main partition
+#main_part=/dev/x
+
+#detected by script
+test_part=auto
+#there is not test partition
+#test_part=n (only ^ forced or manual)
+#specify the test parition
+#test_part=/dev/x
+
+#whether to rebuild image (and flash if enabled) after initramfs update
+init_gen_hook=y
+#init_gen_hook=n

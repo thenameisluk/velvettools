@@ -13,6 +13,21 @@
 
 ```<optional>```
 
+# Config (wip)
+
+flash=auto (default)
+flash=forced
+flash=manual
+
+main_part=auto (default)
+main_part=/dev/x
+
+test_part=auto (default)
+test_part=n (only ^ forced or manual)
+test_part=/dev/x
+
+init_gen_hook=y
+init_gen_hook=n
 
 ## structure
 
