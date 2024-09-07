@@ -1,0 +1,10 @@
+[Unit]
+Description=checks if linux versions switch went well
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/vtcheck
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

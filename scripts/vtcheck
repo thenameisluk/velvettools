@@ -6,6 +6,7 @@ need_root
 
 if [ ! -f /etc/velvettools/testing ];then
     echo nothing to check
+    exit 0
 fi
 
 if [ "$(cat /etc/velvettools/testing)" == "$(uname -r)" ];then

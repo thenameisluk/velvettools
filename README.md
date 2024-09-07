@@ -34,19 +34,27 @@ init_gen_hook=n
 ```
 deb/
 ├── DEBIAN
-│   └── control
+│   ├── control
 │   ├── postinst
-│   └── postrm
+│   ├── postrm
+│   └── prerm
 ├── etc
-│   ├── bash_completion.d <- /usr/share/velvettools/bash/velvettools
+│   ├── bash_completion.d
 │   ├── initramfs
-│   │   └── post-update.d <- /usr/share/velvettools/hooks/after
-│   └── initramfs-tools
-│       └── hooks <- /usr/share/velvettools/hooks/during
+│   │   └── post-update.d
+│   ├── initramfs-tools
+│   │   └── hooks
+│   └── velvettools
+│       └── config
+├── lib
+│   └── systemd
+│       └── system
+│           └── vtcheck.service
 └── usr
     ├── local
     │   └── bin
     │       ├── vtbuild
+    │       ├── vtcheck
     │       ├── vtcommon
     │       ├── vtcommon-flash
     │       ├── vtdisable
