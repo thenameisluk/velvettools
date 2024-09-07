@@ -60,7 +60,12 @@ if [ "$1" == "deb" ];then
     else
         make_deb "$(logname)"
     fi
-    mv linux-${kver}.deb linux-${kver}-1_$(arch).deb
+
+    if [ "$(arch)" == "aarch64" ];then #will add other arch when feel like it maybe
+        arch=arm64
+    fi
+
+    mv linux-${kver}.deb linux-${kver}-1_$arch.deb -v
 fi
 
 if [ "$1" == "targz" ];then 
