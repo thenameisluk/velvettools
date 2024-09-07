@@ -30,6 +30,7 @@ make_deb(){
     #logname gives the username even under sudo
     echo "Maintainer: $1" >> linux-${kver}/DEBIAN/control
     echo "Description: kelner ${kver} package" >> linux-${kver}/DEBIAN/control
+    echo "Triggers: update-initramfs" >> linux-${kver}/DEBIAN/control
 
     echo "this might take a while, be patient"
     dpkg --build linux-${kver}
@@ -59,6 +60,7 @@ if [ "$1" == "deb" ];then
     else
         make_deb "$(logname)"
     fi
+    mv linux-${kver}.deb linux-${kver}-1_$(arch).deb
 fi
 
 if [ "$1" == "targz" ];then 
