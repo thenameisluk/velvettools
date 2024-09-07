@@ -9,6 +9,8 @@ cp ${share}/hooks/during /etc/initramfs-tools/hooks/velvet-build
 cp ${share}/hooks/after /etc/initramfs/post-update.d/velvet-build
 cp ${share}/bash/velvettools /etc/bash_completion.d/velvettools
 
-systemctl enable vtcheck.service
+if [ "$1" = "configure" ]; then
+    systemctl enable vtcheck.service
+fi
 
 dpkg-trigger --await bash-completion

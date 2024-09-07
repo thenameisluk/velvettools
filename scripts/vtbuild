@@ -6,17 +6,17 @@ need_root
 
 #saves current directory
 save_pwd
-cd /boot || exit
+cd /boot
 
 # choosing kelner version
 get_kver ${1}
 
 #it is better to regenerate initramfs everytime
-if [ ! -e initrd.img-${kver} ] || [ "$2" != "noinitgen" ]; then
+if [ ! -f "initrd.img-${kver}" ]; then
   
   touch /boot/norebuild #prevents initramfs from running vtbuild again
 
-  if [ ! -e initrd.img-${kver} ] && [ "$2" == "noinitgen" ]; then
+  if [ "$2" == "noinitgen" ]; then
     echo "sorry but there is no initramft to use ;-;, i have to build one, want to continue"
     need_confirmation
   fi
@@ -27,12 +27,12 @@ if [ ! -e initrd.img-${kver} ] || [ "$2" != "noinitgen" ]; then
   rm /boot/norebuild 2> /dev/null
 fi
 
-if [ ! -e "initrd.img-${kver}" ]; then
+if [ ! -f "initrd.img-${kver}" ]; then
   echo "sorry. unable to generate initramfs TwT"
   exit 1
 fi
 
-if [ ! -e cmdline ]; then
+if [ ! -f cmdline ]; then
   echo "cmdline seams to be missing"
   echo "Note. will create one for you"
   # -n prevents echo from adding new line at the end
@@ -50,7 +50,7 @@ if [ ! -e cmdline ]; then
 fi
 
 #generating required files
-if [ ! -e "vmlinux.kpart-initrd-${kver}" ]; then #if it's not present the command would throw out of memory error
+if [ ! -f "vmlinux.kpart-initrd-${kver}" ]; then #if it's not present the command would throw out of memory error
   cp -v "vmlinux.kpart-initrd-${kver}" "vmlinux.kpart-initrd-${kver}.old" 2> /dev/null || out_of_memory
 fi
 cp "Image-${kver}" Image || out_of_memory
@@ -71,17 +71,31 @@ dd if=/dev/zero of=bootloader.bin bs=512 count=1 || out_of_memory
 # - generic: dtb-${kver}/*.dtb
 #Note. if you have this script installed instead of modifying
 #it here you can specify dtbs for your system inside /boot/dtbs (file, not folder) 
-#like "sc7180-trogdor-*.dtb" or "sc7180-trogdor-r1.dtb" or "sc7180-trogdor-r1.dtb sc7180-trogdor-r1-lte.dtb"
+#like "sc7180-trogdor-*.dtb" or "sc7180-trogdor-r1.dtb"
 #btw. each dtb seams to add more or less 0.09 MiB
 #all available dtb's are located ad /boot/dtb-<version>
 #you can try to deduce dtb files for your system by running "vthelp dtbs"
 
-if [ ! -e "dtbs" ]; then
+echo i
+
+if [ -f "/etc/velvettools/dtbs" ]; then
+  dtbs_file="/etc/velvettools/dtbs"
+elif [ -f "/boot/dtbs" ]; then
+  dtbs_file="/boot/dtbs"
+fi
+
+if [ "$dtbs_file" != "" ] && [ "$(cat $dtbs_file)" == "" ]; then
+  dtbs_file=""
+fi
+
+if [ "$dtbs_file" == "" ]; then
   ls dtb-${kver}/*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb || out_of_memory
 else
+  echo going with $dtbs_file
   echo "the dtbs picked :"
-  ls dtb-${kver}/$(cat dtbs)
-  ls dtb-${kver}/$(cat dtbs) | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb || out_of_memory
+
+  ls dtb-${kver}/$(cat $dtbs_file)
+  ls dtb-${kver}/$(cat $dtbs_file) | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb || out_of_memory
 fi
 
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm

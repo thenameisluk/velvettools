@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.5.2
+VERSION=0.6.0
 RELEASENUMBER=1 #only increse temporary if fix touches only deb/DEBIAN
 
 rm -rf deb

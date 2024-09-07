@@ -15,9 +15,10 @@ config file
 (done)-flash and test partition (auto|none|/dev/mmcblk1p1) (in case autodetection malfunctions for whatever reason)
 (done)-update-initramfs hook (y/n)
 (done)-auto flash
-(needs deamon)auto new kernel test ^ (when auto flash)
+(done)auto new kernel test ^ (when auto flash)
 better error handling (out of memory, ...)
 (done)vtpackage (for packaging the kernel into deb/tar.gz)
 (impossible)source bashcompletion after install - https://unix.stackexchange.com/questions/527541/update-bash-completion-automatically-when-installing-package
 (done)kernel presence check (vtcommon)
-read dtbs and cmdline from diffrent location
+(only dtbs, not sure abt cmdline)read dtbs and cmdline from diffrent location (/etc/velvettools /boot)
+fix dtbs not working with multiple specyfic files

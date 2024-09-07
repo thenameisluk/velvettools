@@ -13,21 +13,36 @@
 
 ```<optional>```
 
-# Config (wip)
+# Config
 
+config file can be found at /etc/velvettools/config
+
+```
 flash=auto (default)
+if the kernel version is the same it will just flash it, but when switching versions it will test for successful boot first
 flash=forced
+will automatically flash without testing
 flash=manual
+will not flash automatically unless you ask for it
 
 main_part=auto (default)
+will automatically be detected
 main_part=/dev/x
+in case you are running not default configuretion you can specify the partition
+
 
 test_part=auto (default)
+will automatically be detected
 test_part=n (only ^ forced or manual)
+in case there is no test partition
 test_part=/dev/x
+in case you are running not default configuretion you can specify the partition
 
 init_gen_hook=y
+automatically rebuild and flash image (if enabled) when initramfs is rebuilt
 init_gen_hook=n
+or no
+```
 
 ## structure
 

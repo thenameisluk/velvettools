@@ -1,10 +1,10 @@
-might be located at /boot/dtbs
+might be located at /etc/velvettools/dtbs or /boot/dtbs
 you can create it yourself
 
 inside you can put stuff like
 - "sc7180-trogdor-*.dtb" for multiple files that match
 - "sc7180-trogdor-r1.dtb" for single file (if you are sure that's the correct one)
-- "sc7180-trogdor-r1.dtb sc7180-trogdor-r1-lte.dtb" for specyfic multiple files
+- (not working for now)"sc7180-trogdor-r1.dtb sc7180-trogdor-r1-lte.dtb" for specyfic multiple files
 
 Note. each dtb seams to add more or less 0.09 MiB to image size
 Note. all available dtb's are loacated at /boot/dtb-(version)/

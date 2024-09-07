@@ -1,3 +1,5 @@
 #!/bin/bash
 
-systemctl disable vtcheck.service
+if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+    systemctl disable vtcheck.service
+fi
