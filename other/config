@@ -1,6 +1,6 @@
-#flashed the kelner if the version is same as current one, and tests it then flashes it after succesful boot
+#flashed the kernel if the version is same as current one, and tests it then flashes it after succesful boot
 flash=auto
-#simply flashes the kelner to the main partition
+#simply flashes the kernel to the main partition
 #flash=forced
 #no flashing occures automatically
 #flash=manual

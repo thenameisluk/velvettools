@@ -7,8 +7,8 @@
 - ```vttest <version> </dev/diskname>``` flashes the image for testing
 - ```vtdisable </dev/diskname>``` makes partiotion unbootable
 - ```vthelp <page>``` shows helpful info scripts related things
-- ```vtpack deb <version> <maintainer>``` makes you cool kelner.deb
-- ```vtpack targz <version>``` packs kelner very nicely into tar.g
+- ```vtpack deb <version> <maintainer>``` makes you cool kernel.deb
+- ```vtpack targz <version>``` packs kernel very nicely into tar.g
 - ```vtpack dir <version>``` makes directory structure, usefull for packing for other linux distros
 
 ```<optional>```
@@ -19,11 +19,11 @@ config file can be found at /etc/velvettools/config
 
 ```
 flash=auto (default)
-if the kernel version is the same it will just flash it, but when switching versions it will test for successful boot first
+if the kernel version is the same it will just flash it, but when switching versions it will test for successful boot first (recommened)
 flash=forced
-will automatically flash without testing
+will automatically flash without testing (not recommened)
 flash=manual
-will not flash automatically unless you ask for it
+will not flash automatically unless you ask for it using vtflash or vttest (recommended for testing patches or cmdline)
 
 main_part=auto (default)
 will automatically be detected

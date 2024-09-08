@@ -11,7 +11,7 @@ need_root() {
 
 get_kver() {
     if [ "$1" == "" ]; then
-        echo "Note. no kelner specified, going with current kelner"
+        echo "Note. no kernel specified, going with current kernel"
         kver=$(uname -r)
     else
         #kernel presence check would be nice :3
@@ -21,11 +21,11 @@ get_kver() {
     # it's not like we can stupid proof every file
     if [ ! -e "/boot/Image-${kver}" ]; then
         echo "Image-${kver} seams to be missing"
-        echo "ple ple ple your kelner version is likely wrong"
+        echo "ple ple ple your kernel version is likely wrong"
         exit 1
     fi
 
-    echo "kelner chosen ${kver}"
+    echo "kernel chosen ${kver}"
 }
 
 need_confirmation(){

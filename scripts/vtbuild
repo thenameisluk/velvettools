@@ -8,7 +8,7 @@ need_root
 save_pwd
 cd /boot
 
-# choosing kelner version
+# choosing kernel version
 get_kver ${1}
 
 #it is better to regenerate initramfs everytime
@@ -109,15 +109,6 @@ rm -f Image Image.lzma initrd.img.xz bootloader.bin kernel.itb vmlinux.kpart
 
 #printing results
 echo image put inside /boot/vmlinux.kpart-initrd-${kver}
-echo ""
-echo "for single boot only testing:"
-echo ""
-echo "  vttest $kver"
-echo ""
-echo "to always boot this kernel after successful testing:"
-echo ""
-echo "  vtflash $kver"
-echo ""
 
 #returns to previous directory
 restor_pwd
@@ -131,11 +122,21 @@ if [ "$flash" == "auto" ]; then
     vtflash $kver yes
   else
     vttest $kver yes
-    echo the kelner will be permamently flashed after successful boot
+    echo the kernel will be permamently flashed after successful boot
     echo to prevent it remove /etc/velvettools/testing
     echo -n $kver > /etc/velvettools/testing
   fi
 elif [ "$flash" == "forced" ];then
-  echo forced flashing
+  echo forced main flashing
   vtflash $kver yes
+else #manual
+  echo ""
+  echo "for single boot only testing:"
+  echo ""
+  echo "  vttest $kver"
+  echo ""
+  echo "to always boot this kernel after successful testing:"
+  echo ""
+  echo "  vtflash $kver"
+  echo ""
 fi

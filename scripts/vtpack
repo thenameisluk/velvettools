@@ -29,7 +29,7 @@ make_deb(){
     echo "Depends: velvet-tools" >> linux-${kver}/DEBIAN/control
     #logname gives the username even under sudo
     echo "Maintainer: $1" >> linux-${kver}/DEBIAN/control
-    echo "Description: kelner ${kver} package" >> linux-${kver}/DEBIAN/control
+    echo "Description: kernel ${kver} package" >> linux-${kver}/DEBIAN/control
     echo "Triggers: update-initramfs" >> linux-${kver}/DEBIAN/control
 
     echo "this might take a while, be patient"

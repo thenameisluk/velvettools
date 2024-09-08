@@ -2,6 +2,6 @@ vtpack deb <version> <maintainer>
 vtpack targz <version>
 vtpack dir <version>
 
-packs your kelner into tar.gz or deb
+packs your kernel into tar.gz or deb
 
 <optional>
