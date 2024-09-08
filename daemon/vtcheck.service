@@ -4,7 +4,12 @@ After=network.target
 
 [Service]
 ExecStart=/usr/local/bin/vtcheck
-Restart=always
+Type=oneshot
+RemainAfterExit=true
+
+# Log output options
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
