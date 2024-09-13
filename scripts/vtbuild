@@ -116,19 +116,43 @@ restor_pwd
 #auto flashing
 load_config
 
+kflash(){
+  if [ -f $(dirname $BASH_SOURCE)/vtflash ];then
+    $(dirname $BASH_SOURCE)/vtflash $kver yes
+  elif [ "$(which vtflash)" != "" ];then # sometimes apt doesn't supply full PATH variable and update initramfs fails
+    vtflash $kver yes
+  elif [ -f /usr/local/bin/vtflash ];then
+    /usr/local/bin/vtflash $kver yes
+  else
+    echo "vtflash doesn't seam to be present, unable to flash automatically"
+  fi
+}
+
+ktest(){
+  if [ -f $(dirname $BASH_SOURCE)/vttest ];then
+    $(dirname $BASH_SOURCE)/vttest $kver yes
+  elif [ "$(which vttest)" != "" ];then # sometimes apt doesn't supply full PATH variable and update initramfs fails
+    vttest $kver yes
+  elif [ -f /usr/local/bin/vttest ];then
+    /usr/local/bin/vttest $kver yes
+  else
+    echo "vttest doesn't seam to be present, unable to flash automatically"
+  fi
+}
+
 if [ "$flash" == "auto" ]; then
   echo automatic flashing
   if [ "$kver" == "$(uname -r)" ];then
-    vtflash $kver yes
+    kflash
   else
-    vttest $kver yes
+    ktest
     echo the kernel will be permamently flashed after successful boot
     echo to prevent it remove /etc/velvettools/testing
     echo -n $kver > /etc/velvettools/testing
   fi
 elif [ "$flash" == "forced" ];then
   echo forced main flashing
-  vtflash $kver yes
+  kflash
 else #manual
   echo ""
   echo "for single boot only testing:"
