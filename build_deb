@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=0.6.5
+VERSION=0.6.6
 RELEASENUMBER=1 #only increse temporary if fix touches only deb/DEBIAN
 
 rm -rf deb
@@ -23,6 +23,7 @@ cp other/control deb/DEBIAN/control -v
 cp other/postinst deb/DEBIAN/postinst -v
 cp other/postrm deb/DEBIAN/postrm -v
 cp other/prerm deb/DEBIAN/prerm -v
+cp other/conffiles deb/DEBIAN/conffiles -v
 sed -i "s/VERSION/${VERSION}/g" deb/DEBIAN/control
 
 #main binaries (bash scripts)

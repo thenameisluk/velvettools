@@ -39,9 +39,9 @@ flash_procedure(){
         get_partid_kpart_and_pdisk_from_drive $2
     else
         load_config
-
+        
         if [ "$part" == "auto" ]; then
-            get_kpart_and_pdisk $part
+            get_kpart_and_pdisk
         elif [ "$part" == "none" ]; then
             echo "partition set to none, can't flash"
             exit

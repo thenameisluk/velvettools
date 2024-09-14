@@ -15,6 +15,6 @@ load_config
 part=$main_part
 
 echo flashing main partition
-flash_procedure "$1" "$2"
+flash_procedure $1 $2
 
 cgpt add -i ${id} -S 1 -T 2 -P 10 /dev/${pdisk}
