@@ -13,4 +13,9 @@ if [ "$1" = "configure" ]; then
     systemctl enable vtcheck.service
 fi
 
+if [ ! -f "/etc/velvettools/config" ]; then
+    mkdir -p /etc/velvettools
+    cp /usr/share/velvettools/config /etc/velvettools/config
+fi
+
 dpkg-trigger --await bash-completion

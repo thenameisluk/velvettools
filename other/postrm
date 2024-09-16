@@ -2,3 +2,8 @@
 rm /etc/initramfs-tools/hooks/velvet-build
 rm /etc/initramfs/post-update.d/velvet-build
 rm /etc/bash_completion.d/velvettools
+
+if [ "$1" = "purge" ]; then
+    rm /etc/velvettools/config
+    rm -rf /etc/velvettools
+fi

@@ -23,7 +23,6 @@ cp other/control deb/DEBIAN/control -v
 cp other/postinst deb/DEBIAN/postinst -v
 cp other/postrm deb/DEBIAN/postrm -v
 cp other/prerm deb/DEBIAN/prerm -v
-cp other/conffiles deb/DEBIAN/conffiles -v
 sed -i "s/VERSION/${VERSION}/g" deb/DEBIAN/control
 
 #main binaries (bash scripts)
@@ -42,8 +41,8 @@ cp initramfs-hooks/after deb/usr/share/velvettools/hooks/after -v
 #daemon
 cp daemon/vtcheck.service deb/lib/systemd/system/vtcheck.service
 
-#config
-cp other/config deb/etc/velvettools/config -v
+#default config
+cp other/config deb/usr/share/velvettools/config -v
 
 dpkg-deb --build deb
 
