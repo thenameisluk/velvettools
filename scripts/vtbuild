@@ -35,8 +35,22 @@ fi
 if [ ! -f cmdline ]; then
   echo "cmdline seams to be missing"
   echo "Note. will create one for you"
+
+  #root parameter gen
+  rootp=$(findmnt -n -o SOURCE /) #/dev/mmcblk1p4 or similar
+
+  if [ "$(lsblk -no LABEL ${rootp})" != "" ];then 
+    echo using Label as root itentifier
+    rootp="LABEL=$(lsblk -no LABEL ${rootp})"
+  else 
+    echo using UUID as root itentifier
+    rootp="UUID=$(lsblk -no UUID ${rootp})"
+  fi
+
+  echo $rootp
+
   # -n prevents echo from adding new line at the end
-  echo -n "console=tty1 root=LABEL=rootemmc rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 quiet splash" > cmdline
+  echo -n "console=tty1 root=${rootp} rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 quiet splash" > cmdline
   
   #cbq requires additional cmdline
   if echo "$kver" | grep -q "cbq"; then
