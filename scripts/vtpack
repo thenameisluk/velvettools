@@ -1,6 +1,6 @@
 #!/bin/bash
-#vtpack deb <version> <maintainer>
-#vtpack targz <version>
+# vtpack deb <version> <maintainer>
+# vtpack targz <version>
 
 source $(dirname $BASH_SOURCE)/vtcommon
 
@@ -36,7 +36,7 @@ make_deb(){
         sed -i "s/MAINTAINER/$1/g" $file
     done
 
-    echo "this might take a while, be patient"
+    echo "this might take a while, please be patient"
     dpkg-deb --root-owner-group --build linux-${kver}
 
     rm -rf linux-${kver}
@@ -45,7 +45,7 @@ make_deb(){
 }
 
 make_targz(){
-    #lol 10+ lines vs oneliner :3
+    # lol 10+ lines vs oneliner :3
     tar cvzf "${kver}.tar.gz" "/boot/Image-${kver}" "/boot/System.map-${kver}" "/boot/config-${kver}" "/boot/dtb-${kver}" "/lib/modules/${kver}"
 }
 

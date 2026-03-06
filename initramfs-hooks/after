@@ -5,17 +5,17 @@ if [ "$init_gen_hook" != "y" ];then
 fi
 
 unknown_error(){
-  echo WARNING. something went wrong while building the image pls be carefull while flashing it
+  echo WARNING. something went wrong while building the image please be careful while flashing it.
   exit 1
 }
 
-#don't run vtbuild if command was ran by vtbuild
+# don't run vtbuild if command was run by vtbuild
 if [ ! -f /boot/norebuild ]; then
   /usr/bin/vtbuild $(cat /boot/to-update) noinitgen || unknown_error
   rm /boot/to-update
 fi
 
-#just in case sb smart, ctrl+c out of vtbuild
+# just in case somebody smart, C-c out of vtbuild
 rm /boot/norebuild 2> /dev/null
 
-exit 0 #for whatever reason it otherwise exits with error one
+exit 0 # for whatever reason, it otherwise exits with error 1

@@ -1,12 +1,11 @@
 #!/bin/bash
-# /etc/bash_completion.d/velvettols
+# /etc/bash_completion.d/velvettools
 
 get_available_kernel_versions(){
     ls -1 /boot/Image-* | sed "s|/boot/Image-||g"
 }
 
 # vtpack
-
 _vt_pack_completion() {
     local curr_arg="${COMP_WORDS[COMP_CWORD]}"
 
@@ -55,7 +54,7 @@ complete -F _vt_flash_completion vtflash
 complete -F _vt_flash_completion vttest
 complete -F _vt_flash_completion vtdisable
 
-#vtdisable
+# vtdisable
 _vt_disk_completion() {
     local curr_arg="${COMP_WORDS[COMP_CWORD]}"
 
@@ -69,7 +68,7 @@ _vt_disk_completion() {
 }
 complete -F _vt_disk_completion vtdisable
 
-#vtbuild
+# vtbuild
 _vt_build_completion() {
     local curr_arg="${COMP_WORDS[COMP_CWORD]}"
 
@@ -91,7 +90,7 @@ _vt_build_completion() {
 }
 complete -F _vt_build_completion vtbuild
 
-#vthelp
+# vthelp
 _vt_help_completion() {
     local curr_arg="${COMP_WORDS[COMP_CWORD]}"
 

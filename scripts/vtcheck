@@ -1,5 +1,5 @@
 #!/bin/bash
-#checks for succesful boot
+#checks for successful boot
 source $(dirname $BASH_SOURCE)/vtcommon
 
 need_root
@@ -21,4 +21,4 @@ if [ "$(cat /boot/hash-${kver})" == "$(get_kparam KERNEL_HASH)" ];then
     exit
 fi
 
-echo hash miss match
+echo hash mismatch

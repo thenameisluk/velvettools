@@ -1,8 +1,9 @@
-Usage vtbuild <vesion> <option>
-is used to build bootable deptcharge image
-specifying kernel version is optional
+Usage vtbuild <version> <option>
+is used to build bootable depthcharge image,
+specifying a kernel version is optional.
 
-it will also generate cmdline at /boot/cmdline if missing
+it will also generate a cmdline at /boot/cmdline
+if there are none.
 
 available options :
 noinitgen - will not generate new initramfs

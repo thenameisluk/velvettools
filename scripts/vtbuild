@@ -10,7 +10,7 @@ if [[ $1 == "help" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]];then
   echo CUSTOM_PARAMETER=\"\" custom parameters to be appended
   echo
   echo CUSTOM_ROOT_DEVICE=\"\" specify custom root device
-  echo CUSTOM_ROOT_PARAMETER=\"\" direcly specify root kernel parameter \(has priority over custom root\)
+  echo CUSTOM_ROOT_PARAMETER=\"\" directly specify root kernel parameter \(has priority over custom root\)
   echo example: \"root=LABEL=name\" \"root=UUID=uuid\" \"root=/dev/sdx\"
   echo
   echo NO_FLASH= any value other than empty prevents automatic/forced flashing
@@ -25,32 +25,32 @@ source $(dirname $BASH_SOURCE)/vtcommon
 
 need_root
 
-# choosing kernel version
+# choosing a kernel version
 get_kver "${1}"
 
-#it is better to regenerate initramfs everytime
+# it is better to regenerate the initramfs every time
 if [ ! -f "/boot/initrd.img-${kver}" ]; then
   
-  touch /boot/norebuild #prevents initramfs from running vtbuild again
+  touch /boot/norebuild # prevents initramfs from running vtbuild again
 
   if [ "$2" == "noinitgen" ]; then
-    echo "sorry but there is no initramfs to use ;-;, i have to build one, want to continue"
+    echo "sorry but there is no initramfs to use ;-;, I'd have to build one, want to continue ?"
     need_confirmation
   fi
 
-  echo "initrd.img-${kver} seems to be missing, trying to generate"
+  echo "initrd.img-${kver} seems to be missing, trying to generate one for you"
   update-initramfs -c -k "${kver}"
 
   rm -f /boot/norebuild 2> /dev/null
 fi
 
 if [ ! -f "/boot/initrd.img-${kver}" ]; then
-  echo "sorry. unable to generate initramfs TwT"
+  echo "sorry. I was unable to generate an initramfs TwT"
   exit 1
 fi
 
 
-#fallback to generated/old cmdline
+# fallback to generated/old cmdline
 if [[ ! -f /boot/cmdline-custom ]] && [[ ! -f "/boot/cmdline-${kver}" ]]; then
 
   if [ -f /boot/cmdline ];then
@@ -58,13 +58,13 @@ if [[ ! -f /boot/cmdline-custom ]] && [[ ! -f "/boot/cmdline-${kver}" ]]; then
     mv /boot/cmdline /boot/cmdline-custom
   
   else
-    echo "cmdline seams to be missing"
-    echo "Note. will create one for you"
+    echo "cmdline seems to be missing"
+    echo "Note. I will create one for you"
 
     # -n prevents echo from adding new line at the end
     echo -n "console=tty1 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 quiet splash" > /boot/cmdline-custom
     
-    #cbq requires additional cmdline
+    # cbq requires additional cmdline
     if echo "$kver" | grep -q "cbq"; then
       echo "there is cbq"
       echo -n " deferred_probe_timeout=30 clk_ignore_unused=1" >> /boot/cmdline-custom
@@ -73,7 +73,7 @@ if [[ ! -f /boot/cmdline-custom ]] && [[ ! -f "/boot/cmdline-${kver}" ]]; then
   fi
 fi
 
-#move to remporary directory
+# move to tremporary directory
 WORKING_DIR="$(mktemp -d | tr -d '\n')"
 cd $WORKING_DIR
 echo WORKING_DIR=\"${WORKING_DIR}\"
@@ -83,40 +83,41 @@ get_root_parameter(){
   echo ROOT_DEVICE=$ROOT_DEVICE
 
   if [ "$(lsblk -no LABEL ${ROOT_DEVICE})" != "" ];then 
-    echo using Label as root itentifier
-    ROOT_PAREMETER="root=LABEL=$(lsblk -d -no LABEL ${ROOT_DEVICE})"
+    echo using Label as root identifier
+    ROOT_PARAMETER="root=LABEL=$(lsblk -d -no LABEL ${ROOT_DEVICE})"
   elif [ "$(lsblk -no UUID ${ROOT_DEVICE})" != "" ];then
-    echo using UUID as root itentifier
-    ROOT_PAREMETER="root=UUID=$(lsblk -d -no UUID ${ROOT_DEVICE})"
+    echo using UUID as root identifier
+    ROOT_PARA
+    METER="root=UUID=$(lsblk -d -no UUID ${ROOT_DEVICE})"
   else
-    echo WARNING. the script was unable to determin parittion lable or uuid of the device
-    echo since CUSTOM_ROOT_PARAMETER was not provide
-    echo the script will default to device absolute path as root instead which is NOT RELIABLE
+    echo WARNING. the script was unable to determine the partition label or uuid of the device
+    echo since CUSTOM_ROOT_PARAMETER was not provided
+    echo the script will default to the device absolute path as root instead which is NOT RELIABLE
 
-    ROOT_PAREMETER="root=$ROOT_DEVICE"
+    ROOT_PARAMETER="root=$ROOT_DEVICE"
     sleep 10
   fi
 }
 
-#root parameter gen
+# root parameter gen
 if [ "${CUSTOM_ROOT_PARAMETER}" != "" ];then
-  ROOT_PAREMETER="${CUSTOM_ROOT_PARAMETER}"
+  ROOT_PARAMETER="${CUSTOM_ROOT_PARAMETER}"
 elif [ "${CUSTOM_ROOT_DEVICE}" != "" ];then
   get_root_parameter "${CUSTOM_ROOT_DEVICE}"
 elif [ "$(findmnt -n -o SOURCE /)" != "" ];then
-  get_root_parameter "$(findmnt -n -o SOURCE /)" #/dev/mmcblk1p4 or similar
+  get_root_parameter "$(findmnt -n -o SOURCE /)" # /dev/mmcblk1p4 or similar
 else
   echo ERROR. unable to detect root device
-  echo this may occure under incorrectly setup chroot
+  echo this may occur due to an incorrectly set up chroot
   echo aborting the build process
 
   exit 2
 fi
 
 
-#generating final cmdline
+# generating the final cmdline
 echo
-echo -n "${ROOT_PAREMETER} " > cmdline;
+echo -n "${ROOT_PARAMETER} " > cmdline;
 
 if [ -f /boot/cmdline-${kver} ];then
   echo -n "$(cat /boot/cmdline-${kver}) " >> cmdline;
@@ -126,12 +127,12 @@ if [ -f /boot/cmdline-custom ];then
   echo -n "$(cat /boot/cmdline-custom) " >> cmdline;
 fi
 
-#custom parameter
+# custom parameter
 if [ "${CUSTOM_PARAMETER}" != "" ];then
   echo -n " ${CUSTOM_PARAMETER}" >> cmdline
 fi
 
-#kernel hash
+# kernel hash
 KERNEL_HASH="$(hash_file cmdline)$(hash_file /boot/initrd.img-${kver})"
 
 echo -n " KERNEL_HASH=${KERNEL_HASH}" >> cmdline
@@ -140,20 +141,20 @@ echo -n "cmdline used : "
 cat cmdline
 
 echo
-#check out the cmdline
+# check out the cmdline
 sleep 5
 
-#generating required files
-if [ -f "/boot/vmlinux.kpart-initrd-${kver}" ] && [ "${CUSTOM_PREFIX}${CUSTOM_SUFFIX}" == "" ]; then #if it's not present the command would throw out of memory error
+# generating required files
+if [ -f "/boot/vmlinux.kpart-initrd-${kver}" ] && [ "${CUSTOM_PREFIX}${CUSTOM_SUFFIX}" == "" ]; then # if it isn't present the command will throw an out of memory error
   cp -v "/boot/vmlinux.kpart-initrd-${kver}" "/boot/vmlinux.kpart-initrd-${kver}.old" 2> /dev/null || out_of_memory
 fi
 cp "/boot/Image-${kver}" Image || out_of_memory
 lzma -9 -z -f -k -v Image || out_of_memory
 cp "/boot/initrd.img-${kver}" initrd.img.xz || out_of_memory
 
-#moved cmdline to seperate file to make it cleaner to edit
+# moved cmdline to separate file to make it cleaner to edit
 # for cbq add: deferred_probe_timeout=30 clk_ignore_unused=1
-#echo "console=tty1 root=LABEL=rootemmc rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 quiet splash" > cmdline
+# echo "console=tty1 root=LABEL=rootemmc rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 quiet splash" > cmdline
 
 dd if=/dev/zero of=bootloader.bin bs=512 count=1 || out_of_memory
 
@@ -163,12 +164,12 @@ dd if=/dev/zero of=bootloader.bin bs=512 count=1 || out_of_memory
 # - mt8: dtb-${kver}/mt8183-*.dtb
 # - cbq: dtb-${kver}/sc7180-trogdor-*.dtb
 # - generic: dtb-${kver}/*.dtb
-#Note. if you have this script installed instead of modifying
-#it here you can specify dtbs for your system inside /boot/dtbs (file, not folder) 
-#like "sc7180-trogdor-*.dtb" or "sc7180-trogdor-r1.dtb"
-#btw. each dtb seams to add more or less 0.09 MiB
-#all available dtb's are located ad /boot/dtb-<version>
-#you can try to deduce dtb files for your system by running "vthelp dtbs"
+# Note. if you have this script installed, instead of modifying
+# it here, you can specify dtbs for your system inside /boot/dtbs (file, not folder) 
+# like "sc7180-trogdor-*.dtb" or "sc7180-trogdor-r1.dtb"
+# BTW. each dtb seems to add, more or less, 0.09 MiB
+# all available dtbs are located at /boot/dtb-<version>
+# you can try to deduce the dtb files for your system by running "vthelp dtbs"
 
 echo i
 
@@ -195,15 +196,15 @@ fi
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
 mv -v vmlinux.kpart "/boot/${CUSTOM_PREFIX}vmlinux.kpart-initrd-${kver}${CUSTOM_SUFFIX}" || out_of_memory
 
-#cleanning up
+# cleaning up
 rm -f Image Image.lzma initrd.img.xz bootloader.bin kernel.itb vmlinux.kpart cmdline
 cd ..
 rmdir $WORKING_DIR
 
 
-#final output
+# final output
 
-#printing results
+# printing results
 echo image put inside "/boot/${CUSTOM_PREFIX}vmlinux.kpart-initrd-${kver}${CUSTOM_SUFFIX}"
 
 if [ "$CUSTOM_PREFIX" != "" ] || [ "$CUSTOM_SUFFIX" != "" ];then
@@ -216,7 +217,7 @@ if [ "${NO_FLASH}" != "" ]; then
   exit 0
 fi
 
-#auto flashing
+# auto flashing
 load_config
 
 kflash(){
@@ -227,7 +228,7 @@ kflash(){
   elif [ -f /usr/local/bin/vtflash ];then
     /usr/local/bin/vtflash $kver yes
   else
-    echo "vtflash doesn't seam to be present, unable to flash automatically"
+    echo "vtflash doesn't seem to be present, unable to automatically flash"
   fi
 }
 
@@ -239,7 +240,7 @@ ktest(){
   elif [ -f /usr/local/bin/vttest ];then
     /usr/local/bin/vttest $kver yes
   else
-    echo "vttest doesn't seam to be present, unable to flash automatically"
+    echo "vttest doesn't seem to be present, unable to automatically flash"
   fi
 }
 
@@ -249,14 +250,14 @@ if [ "$flash" == "auto" ]; then
     kflash
   else
     ktest
-    echo the kernel will be permamently flashed after successful boot
-    echo to prevent it remove /etc/velvettools/testing
+    echo the kernel will be permanently flashed after it successfully boots,
+    echo to prevent it, remove /etc/velvettools/testing
     echo -n $kver > /etc/velvettools/testing
   fi
 elif [ "$flash" == "forced" ];then
   echo forced main flashing
   kflash
-else #manual
+else # manual
   echo ""
   echo "for single boot only testing:"
   echo ""

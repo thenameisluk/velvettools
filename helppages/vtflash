@@ -1,7 +1,7 @@
 Usage vtflash <version> </dev/diskname>
-will flahs bootable image to first or specified partition
+will flash a bootable image to the first, or to a specified partition
 and make it always bootable
 
-unless there is a untested partition, made using vttest
+unless there is a, untested partition, made using vttest.
 
 <optional>

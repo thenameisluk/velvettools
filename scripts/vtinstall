@@ -30,10 +30,10 @@ while [ $# -gt 0 ]; do
 done
 
 
-#setting SHUT environment variable will disable all useless data and prompt
-#this is only recommended for a wraper around the script
+# setting SHUT environment variable will disable all useless data and prompt
+# this is only recommended for a wrapper around the script
 
-set -e #exit on error
+set -e # exit on error
 
 root_device(){
     lsblk --raw -d -no PKNAME $(findmnt / --raw -no SOURCE)
@@ -75,7 +75,7 @@ if [ "$DEVICE" == "" ];then
     fi
 
     valid_devices
-    #filter out block devices which might not be a good place to install a system
+    # filter out block devices which might not be a good place to install a system
     exit 0
 fi
 
@@ -108,7 +108,7 @@ fi
 
 echo "[info] unmounting all partitions of target"
 if [ "$(lsblk --raw -no MOUNTPOINTS $TARGET | tr '\n' ' ' | tr -d ' ')" != "" ];then
-    umount $(lsblk --raw -no MOUNTPOINTS $TARGET | tr '\n' ' ') #sed didn't work but tr seams to also be unix core util
+    umount $(lsblk --raw -no MOUNTPOINTS $TARGET | tr '\n' ' ') #sed didn't work but tr seems to also be in the unix core util
 fi
 
 echo "[info] wipe partition table"
@@ -169,7 +169,7 @@ lsblk $TARGET
 
 echo "[info] create/mount file system"
 
-#get partiton like /dev/sda or /dev/mmcblk1p
+#get partition like /dev/sda or /dev/mmcblk1p
 TARGET_PART="/dev/$(lsblk --raw -no NAME $TARGET | sed -n '2 p' | sed 's/[0-9]*$//')"
 
 if [ "$NO_BOOT_PARTITION" == "" ]; then
@@ -182,7 +182,7 @@ if [ "$USE_LUKS" == "yes" ]; then
     if [ "${SHUT}" == "" ];then
         echo "LUKS encryption will be set up on the root partition."
         echo "You will be prompted to enter a passphrase for the encryption."
-        echo "Please choose a strong passphrase and remember it!"
+        echo "Please choose a strong passphrase, and remember it!"
         echo ""
     fi
     
@@ -284,7 +284,7 @@ fi
 
 if [ "$USE_LUKS" == "yes" ] && [ "${SHUT}" == "" ]; then
     echo
-    echo "[info] LUKS installation completed successfully!"
+    echo "[info] LUKS installation was completed successfully!"
     echo "The root partition is now encrypted and the system is configured to"
     echo "unlock it at boot time. You will be prompted for your passphrase"
     echo "during boot. Make sure to remember your passphrase!"

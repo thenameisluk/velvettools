@@ -1,21 +1,21 @@
 #!/bin/bash
-#common functionality for flash scripts
+# common functionality for flashing scripts
 
 get_kpart_and_pdisk(){
 
-    #getting where root is mounted from, /dev/mmcblk0p4 or /dev/sda4 or /dev/mapper/encrypted
+    # getting where root is mounted from, /dev/mmcblk0p4, /dev/sda4, or /dev/mapper/encrypted
     root=$(findmnt -n -o SOURCE /)
 
-    #encrypted partitions are inside /dev/mapper/
+    # encrypted partitions are inside of /dev/mapper/
     if echo $root | grep -q "mapper"; then
-        rawname=$(echo $root | sed 's/\/dev\/mapper\///') #first we remove useless part
-        root=/dev/$(lsblk -no NAME --raw | grep -B1 $rawname | head -n 1) #then we get partition before encrypted on in lsblk
+        rawname=$(echo $root | sed 's/\/dev\/mapper\///') # first, we remove the useless parts
+        root=/dev/$(lsblk -no NAME --raw | grep -B1 $rawname | head -n 1) # then, we get the partition before it's encrypted on in lsblk
     fi
 
-    #obtains the /dev/mmcblk1p or /dev/sda or similar
+    # obtains the /dev/mmcblk1p, /dev/sda, or similar
     kpart=$(echo $root | sed 's/[0-9]*$//')
 
-    #obtains parent disk, since sometimes there is p it otherwise would be tricky
+    # obtains parent disk, since sometimes there is p it otherwise would be tricky
     pdisk=$(lsblk -no PKNAME $root | head -n 1)
 }
 
@@ -23,7 +23,7 @@ get_partid_kpart_and_pdisk_from_drive(){
     lsblk -no PKNAME $1 > /dev/null 2> /dev/null
 
     if [ "$?" != "0" ];then
-        echo "sorry i can't flash to $1"
+        echo "sorry, I can't flash to $1"
         exit
     fi
 
@@ -68,7 +68,7 @@ flash_procedure(){
     image_size=$(file_size "/boot/vmlinux.kpart-initrd-${kver}")
     part_size=$(partition_size ${kpart}${id})
 
-    # check if image is bigger then the partition
+    # check if image is bigger than the partition
     if [ "$image_size" -gt "$part_size" ]; then
         echo "The image (/boot/vmlinux.kpart-initrd-${kver} $image_size) is too big"
         echo "to flash onto partition (${kpart}${id} $part_size)"
@@ -84,11 +84,11 @@ flash_procedure(){
         echo ""
         echo "or"
         echo ""
-        echo "putting all the required dtb's inside /boot/dtbs file"
+        echo "putting all the required dtbs inside /boot/dtbs file"
         echo "\"vthelp dtbs\" for more details"
         echo "Note. only do this if you know what you're doing"
         echo ""
-        echo "THEN building image with vtbuild <version> and retry flashing"
+        echo "THEN building image with vtbuild <version> and try flashing again"
 
         exit 0;
     fi
@@ -109,7 +109,7 @@ flash_procedure(){
 check_flashable_kver() {
     if [ ! -e "/boot/vmlinux.kpart-initrd-${kver}" ]; then
         echo "Error. kernel ${kver} is not flashable, try building it with vtbuild <version>"
-        echo "Note. you can list available kernel versions using \"vtlist\" command"
+        echo "Note. you can list available kernel versions using the \"vtlist\" command"
         exit
     fi
 }

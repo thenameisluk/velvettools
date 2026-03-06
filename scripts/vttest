@@ -3,7 +3,7 @@
 source $(dirname $BASH_SOURCE)/vtcommon
 source $(dirname $BASH_SOURCE)/vtcommon-flash
 
-#imported from vtcommon
+# imported from vtcommon
 need_root
 
 get_kver ${1}

@@ -1,12 +1,12 @@
 #!/bin/bash
 VERSION=0.9.4
-RELEASENUMBER=1 #only increse temporary if fix touches only deb/DEBIAN
+RELEASENUMBER=1 # only increase temporarily if fix touches only deb/DEBIAN
 
 rm -rf deb
 
 mkdir deb
 
-#deb structure
+# deb structure
 mkdir -p deb/usr/bin
 mkdir -p deb/DEBIAN
 mkdir -p deb/etc/bash_completion.d
@@ -19,36 +19,36 @@ mkdir -p deb/usr/share/velvettools/kpack
 mkdir -p deb/etc/initramfs-tools/hooks
 mkdir -p deb/etc/initramfs/post-update.d
 
-#basic deb package info
+# basic deb package info
 cp other/control deb/DEBIAN/control -v
 cp other/postinst deb/DEBIAN/postinst -v
 cp other/postrm deb/DEBIAN/postrm -v
 cp other/prerm deb/DEBIAN/prerm -v
 sed -i "s/VERSION/${VERSION}/g" deb/DEBIAN/control
 
-#kpack files
+# kpack files
 cp kpack/* deb/usr/share/velvettools/kpack/ -v
 
-#main binaries (bash scripts)
+# main binaries (bash scripts)
 cp scripts/vt* deb/usr/bin/ -v
 
-#bash autocompletion
+# bash autocompletion
 cp bashcompletion/velvettools deb/usr/share/velvettools/bash/velvettools -v
 
-#help pages
+# help pages
 cp helppages/* deb/usr/share/velvettools/help/ -v
 
-#initramfs hooks
+# initramfs hooks
 cp initramfs-hooks/during deb/usr/share/velvettools/hooks/during -v
 cp initramfs-hooks/after deb/usr/share/velvettools/hooks/after -v
 
-#daemon
+# daemon
 cp daemon/vtcheck.service deb/lib/systemd/system/vtcheck.service
 
-#default config
+# default config
 cp other/config deb/usr/share/velvettools/config -v
 
 dpkg-deb --build --root-owner-group deb
 
-#<package-name>_<version>-<release-number>_<architecture>
+# <package-name>_<version>-<release-number>_<architecture>
 mv deb.deb velvettools-${VERSION}-${RELEASENUMBER}_all.deb -v

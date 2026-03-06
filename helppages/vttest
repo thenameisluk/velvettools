@@ -1,7 +1,7 @@
-Usage vtflash <version> </dev/diskname>
-will flahs bootable image to second or specified partition
-and make it boot from it once
+Usage vttest <version> </dev/diskname>
+will flash a bootable image to the second, or to a specified partition
+and make it boot from it once.
 
-if everything works and you want it permament use vtflash
+if everything works and you want it to be permanent, use vtflash.
 
 <optional>

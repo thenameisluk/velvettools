@@ -1,5 +1,5 @@
 [Unit]
-Description=checks if linux versions switch went well
+Description=checks whether the linux version switch went well.
 After=network.target
 
 [Service]

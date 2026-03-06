@@ -1,9 +1,9 @@
-kernel specyfic cmdline is placed at /boot/cmdline-VERSION
+A kernel specific cmdline is placed at /boot/cmdline-VERSION
 
-additional custom cmdline is placed at /boot/cmdline-custom
+An additional custom cmdline is placed at /boot/cmdline-custom
 
-root parameter is automatically detected by the tools
+The root parameters are automatically detected by the tools.
 
-these 2 cmdline and root parameter
+Both the cmdlines and the root parameters
 
-are combined and passed to the kernal at boot
+are combined and passed to the kernel at boot.

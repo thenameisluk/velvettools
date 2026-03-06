@@ -1,17 +1,17 @@
 #!/bin/bash
-#common functionality among velvet tools
+# common functionalities among velvet tools
 
-# makes sure we have root
+# makes sure we are running as root
 need_root() {
     if [ "$(whoami)" != "root" ]; then
-        echo "This script must be ran as root."
+        echo "This script must be run as root."
         exit
     fi
 }
 
 get_kver() {
     if [ "$1" == "" ]; then
-        echo "Note. no kernel specified, going with current kernel"
+        echo "Note. no kernel was specified, using current kernel"
         kver=$(uname -r)
     else
         #kernel presence check would be nice :3
@@ -20,8 +20,8 @@ get_kver() {
 
     # it's not like we can stupid proof every file
     if [ ! -e "/boot/Image-${kver}" ]; then
-        echo "Image-${kver} seams to be missing"
-        echo "ple ple ple your kernel version is likely wrong"
+        echo "Image-${kver} seems to be missing"
+        echo "ple ple ple, your kernel version is likely wrong"
         exit 1
     fi
 
@@ -38,21 +38,21 @@ need_confirmation(){
 }
 
 out_of_memory(){
-    echo "ur /boot partition is out of memory" 
+    echo "your /boot partition is out of memory" 
     exit
 }
 
 get_y_or_n_answer(){
     echo "[y/N]"
     read answer
-    # add fix for capital letters and diffrent langueges?
+    # add fix for capital letters and different languages?
 }
 
 save_pwd(){
     oldpwd=$(pwd)
 }
 
-restor_pwd(){
+restore_pwd(){
     if [ "$oldpwd" != "" ]; then
         cd "$oldpwd"
     fi
