@@ -2,7 +2,7 @@ Usage vtbuild <version> <option>
 is used to build bootable depthcharge image,
 specifying a kernel version is optional.
 
-it will also generate a cmdline at /boot/cmdline
+It will also generate a cmdline at /boot/cmdline
 if there are none.
 
 available options :

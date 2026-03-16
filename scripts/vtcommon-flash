@@ -6,10 +6,10 @@ get_kpart_and_pdisk(){
     # getting where root is mounted from, /dev/mmcblk0p4, /dev/sda4, or /dev/mapper/encrypted
     root=$(findmnt -n -o SOURCE /)
 
-    # encrypted partitions are inside of /dev/mapper/
+    # encrypted partitions are inside of /dev/mapper
     if echo $root | grep -q "mapper"; then
         rawname=$(echo $root | sed 's/\/dev\/mapper\///') # first, we remove the useless parts
-        root=/dev/$(lsblk -no NAME --raw | grep -B1 $rawname | head -n 1) # then, we get the partition before it's encrypted on in lsblk
+        root=/dev/$(lsblk -no NAME --raw | grep -B1 $rawname | head -n 1) # then, we get the partition before it's encrypted on, in lsblk
     fi
 
     # obtains the /dev/mmcblk1p, /dev/sda, or similar
@@ -59,9 +59,9 @@ flash_procedure(){
     fi
 
     if [ "${2}" == "yes" ];then
-        echo "flashing image to ${kpart}${id}"
+        echo "flashing the image to ${kpart}${id}"
     else
-        echo "Are you sure you want to flash image to ${kpart}${id} ?"
+        echo "Are you sure you want to flash the image to ${kpart}${id} ?"
         need_confirmation
     fi
 
@@ -88,7 +88,7 @@ flash_procedure(){
         echo "\"vthelp dtbs\" for more details"
         echo "Note. only do this if you know what you're doing"
         echo ""
-        echo "THEN building image with vtbuild <version> and try flashing again"
+        echo "THEN build image with vtbuild <version> and try flashing it again"
 
         exit 0;
     fi
@@ -118,9 +118,9 @@ flashing_error(){
     echo "WARNING"
     echo ""
     echo "There was a flashing issue, your device might be"
-    echo "UNABLE TO BOOT"
+    echo "UNABLE TO BOOT."
     echo ""
-    echo "if you understand please type \"understood\""
+    echo "If you understand please type \"understood\"."
 
     read reply
     if [ "$reply" != "understood" ];then

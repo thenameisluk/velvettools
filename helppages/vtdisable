@@ -1,5 +1,5 @@
 Usage vtdisable /dev/diskname
 is used to make a specific partition unbootable,
-don't use it unless you know what you're doing.
+do not use it unless you know what you are doing.
 
 <optional>

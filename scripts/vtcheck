@@ -1,5 +1,5 @@
 #!/bin/bash
-#checks for successful boot
+# checks for successful boot
 source $(dirname $BASH_SOURCE)/vtcommon
 
 need_root

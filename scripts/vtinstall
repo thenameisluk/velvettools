@@ -86,8 +86,8 @@ if [ ! -e "$TARGET" ]; then
 fi
 
 if [ "$(valid_devices | grep "$DEVICE")" == "" ];then
-    echo "the device is not a valid device"
-    echo "this might be a partition"
+    echo "The device is not a valid device."
+    echo "It might be a partition."
     exit 0
 fi
 
@@ -106,26 +106,26 @@ if [ "${SHUT}" == "" ];then
     need_confirmation 
 fi
 
-echo "[info] unmounting all partitions of target"
+echo "[info] unmounting all partitions of target."
 if [ "$(lsblk --raw -no MOUNTPOINTS $TARGET | tr '\n' ' ' | tr -d ' ')" != "" ];then
     umount $(lsblk --raw -no MOUNTPOINTS $TARGET | tr '\n' ' ') #sed didn't work but tr seems to also be in the unix core util
 fi
 
-echo "[info] wipe partition table"
+echo "[info] wiping partition table."
 sgdisk -Z "$TARGET"
 partprobe "$TARGET"
 sgdisk -C -e -G "$TARGET"
 partprobe "$TARGET"
-echo "[info] create a new one"
+echo "[info] creating a new one."
 cgpt create "$TARGET"
 
-echo "[info] create kernel Partitions"
+echo "[info] creating the kernel partitions."
 cgpt add -i 1 -t kernel -b 8192 -s 262144 -l KernelA -S 1 -T 2 -P 10 "$TARGET"
 cgpt add -i 2 -t kernel -b 270336 -s 262144 -l KernelB -S 0 -T 2 -P 5 "$TARGET"
 if [ "$NO_BOOT_PARTITION" == "yes" ]; then
     BOOT_PART_NUM=""
     ROOT_PART_NUM="3"
-    echo "[info] create other partitions (single root)"
+    echo "[info] creating the other partitions (single root)."
     fdisk --wipe-partitions always "$TARGET" << EOF > /dev/null #only report issue
 n
 3
@@ -137,7 +137,7 @@ EOF
 else
     BOOT_PART_NUM="3"
     ROOT_PART_NUM="4"
-    echo "[info] create other partitions (boot + root)"
+    echo "[info] Creating the other partitions (boot + root)."
     fdisk --wipe-partitions always "$TARGET" << EOF > /dev/null #only report issue
 n
 3
@@ -167,7 +167,7 @@ partprobe $TARGET
 
 lsblk $TARGET
 
-echo "[info] create/mount file system"
+echo "[info] creating/mounting the file system."
 
 #get partition like /dev/sda or /dev/mmcblk1p
 TARGET_PART="/dev/$(lsblk --raw -no NAME $TARGET | sed -n '2 p' | sed 's/[0-9]*$//')"
@@ -177,12 +177,12 @@ if [ "$NO_BOOT_PARTITION" == "" ]; then
 fi
 
 if [ "$USE_LUKS" == "yes" ]; then
-    echo "[info] setting up LUKS encryption on root partition"
+    echo "[info] Setting up LUKS encryption on root partition."
     
     if [ "${SHUT}" == "" ];then
         echo "LUKS encryption will be set up on the root partition."
         echo "You will be prompted to enter a passphrase for the encryption."
-        echo "Please choose a strong passphrase, and remember it!"
+        echo "Please choose a strong passphrase, and be sure to remember it!"
         echo ""
     fi
     
@@ -205,14 +205,14 @@ if [ "$NO_BOOT_PARTITION" == "" ]; then
     mount ${TARGET_PART}${BOOT_PART_NUM} /mnt/boot
 fi
 
-echo "[info] copy over filesystem"
+echo "[info] Copying the file system over."
 rsync --info=name -axADHSX --no-inc-recursive --delete /boot/ /mnt/boot || true #sometimes files like to vanish
 rsync --info=name -axADHSX --no-inc-recursive --delete --exclude='/swap/*' / /mnt || true
 
 if [ "$USE_LUKS" == "yes" ]; then
     
     # Configure crypttab for LUKS before initramfs generation
-    echo "[info] configure crypttab for LUKS"
+    echo "[info] Configuring crypttab for LUKS."
     
     # Get the UUID of the encrypted partition
     ENCRYPTED_UUID=$(blkid -s UUID -o value ${TARGET_PART}${ROOT_PART_NUM})
@@ -221,7 +221,7 @@ if [ "$USE_LUKS" == "yes" ]; then
     echo "encrypted UUID=${ENCRYPTED_UUID} none luks" > /mnt/etc/crypttab
     
     # Set up chroot environment for initramfs generation
-    echo "[info] setting up chroot environment"
+    echo "[info] Setting up a chroot environment."
     mount --bind /dev /mnt/dev
     mount --bind /proc /mnt/proc  
     mount --bind /sys /mnt/sys
@@ -229,7 +229,7 @@ if [ "$USE_LUKS" == "yes" ]; then
     
     get_kver
     
-    echo "[info] build kernel partition"
+    echo "[info] Building the kernel partition."
     # clean initramfs to force rebuild by vtbuild
     rm  /mnt/boot/initrd.img-${kver}
     chroot /mnt /bin/bash -c "/usr/bin/vtbuild"
@@ -239,7 +239,7 @@ if [ "$USE_LUKS" == "yes" ]; then
 
     
 else
-    echo "[info] build kernel partition"
+    echo "[info] Building the kernel partition."
     echo "CUSTOM_ROOT_DEVICE=\"${TARGET_PART}${ROOT_PART_NUM}\" NO_FLASH=\"yes\" CUSTOM_PREFIX=\"install-\" $(dirname $BASH_SOURCE)/vtbuild"
     CUSTOM_ROOT_DEVICE="${TARGET_PART}${ROOT_PART_NUM}" NO_FLASH="yes" CUSTOM_PREFIX="install-" $(dirname $BASH_SOURCE)/vtbuild
     
@@ -249,15 +249,15 @@ else
     rm /mnt/boot/vmlinux.kpart-initrd-* #flashing other kernel version from previous install will guarantee unbootable system
     mv /boot/install-vmlinux.kpart-initrd-${kver} /mnt/boot/vmlinux.kpart-initrd-${kver} -v
 
-    echo "[info] flashing kernel partition"
+    echo "[info] Flashing the kernel partition."
     dd if=/mnt/boot/vmlinux.kpart-initrd-${kver} of=${TARGET_PART}1 bs=1024k status=progress
 fi
 
 
-echo "[info] synchronizing device"
+echo "[info] Synchronizing the device."
 sync
 
-echo "[info] adjust fstab"
+echo "[info] Adjusting the fstab."
 if [ "$NO_BOOT_PARTITION" == "yes" ]; then
     echo "LABEL=rootemmc / btrfs defaults,ssd,compress-force=zstd,noatime,nodiratime 0 1" > /mnt/etc/fstab
 else
@@ -271,20 +271,20 @@ if [ "$USE_LUKS" == "yes" ]; then
   
 fi
 
-echo "[info] umount partitions"
+echo "[info] Umount the partitions."
 if [ "$NO_BOOT_PARTITION" == "" ]; then
     umount /mnt/boot
 fi
 umount /mnt
 
 if [ "$USE_LUKS" == "yes" ]; then
-  echo "[info] close LUKS device"
+  echo "[info] Closing the LUKS device."
   cryptsetup close encrypted
 fi
 
 if [ "$USE_LUKS" == "yes" ] && [ "${SHUT}" == "" ]; then
-    echo "[info] LUKS installation was completed successfully!"
     echo ""
+    echo "[info] LUKS installation completed successfully!"
     echo "The root partition is now encrypted and the system is configured to"
     echo "unlock it at boot time. You will be prompted for your passphrase"
     echo "during boot. Make sure to remember your passphrase!"

@@ -10,7 +10,7 @@ if [ "$#" != "1" ]; then
     ls /usr/share/velvettools/help
 else
     if [ ! -e "/usr/share/velvettools/help/$1" ]; then
-        echo "the page doesn't exist"
+        echo "The page does not exist."
         exit
     fi
 

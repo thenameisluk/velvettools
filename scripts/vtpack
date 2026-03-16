@@ -50,7 +50,7 @@ make_targz(){
 }
 
 if [ "$#" == "0" ];then
-    echo "what do you even want me to build???"
+    echo "Please specify what you want to build."
     echo "vtpack deb <version> <maintainer>"
     echo "vtpack targz <version>"
 fi
@@ -58,7 +58,7 @@ fi
 get_kver "$2"
 
 if [ "$1" == "deb" ];then 
-    echo "doing deb"
+    echo "Creating a deb"
     if [ "$3" != "" ];then
         make_deb "$3"
     else
@@ -71,11 +71,11 @@ if [ "$1" == "deb" ];then
 fi
 
 if [ "$1" == "targz" ];then 
-    echo "doing tar.gz"
+    echo "Creating a tar.gz"
     make_targz
 fi
 
 if [ "$1" == "dir" ];then 
-    echo "doing dir"
+    echo "Creating a dir"
     make_dir
 fi

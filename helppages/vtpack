@@ -2,6 +2,6 @@ vtpack deb <version> <maintainer>
 vtpack targz <version>
 vtpack dir <version>
 
-packs your kernel into a .tar.gz or a .deb
+Packs your kernel into a .tar.gz or a .deb
 
 <optional>

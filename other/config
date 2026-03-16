@@ -1,7 +1,7 @@
-# if the kernel version is the same as current one, flashes it, elseway tests to see if it boots and then flashes it
+# if the kernel version is the same as current one, flashes it, elsewise tests to see if it boots and then flashes it
 flash=auto
 # simply flashes the kernel to the main partition
-# flash=forced
+#flash=forced
 # no flashing automatically occurs
 #flash=manual
 

@@ -15,7 +15,7 @@ if [ ! -f /boot/norebuild ]; then
   rm /boot/to-update
 fi
 
-# just in case somebody smart, C-c out of vtbuild
+# just in case somebody smart Ctrl + c out of vtbuild
 rm /boot/norebuild 2> /dev/null
 
 exit 0 # for whatever reason, it otherwise exits with error 1

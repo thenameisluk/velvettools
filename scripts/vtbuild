@@ -33,18 +33,18 @@ if [ ! -f "/boot/initrd.img-${kver}" ]; then
   touch /boot/norebuild # prevents initramfs from running vtbuild again
 
   if [ "$2" == "noinitgen" ]; then
-    echo "sorry but there is no initramfs to use ;-;, I'd have to build one, want to continue ?"
+    echo "Sorry but there is no initramfs to use ;-;. Do you want to build one ?"
     need_confirmation
   fi
 
-  echo "initrd.img-${kver} seems to be missing, trying to generate one for you"
+  echo "initrd.img-${kver} seems to be missing, trying to generate one for you."
   update-initramfs -c -k "${kver}"
 
   rm -f /boot/norebuild 2> /dev/null
 fi
 
 if [ ! -f "/boot/initrd.img-${kver}" ]; then
-  echo "sorry. I was unable to generate an initramfs TwT"
+  echo "Sorry. I was unable to generate an initramfs. TwT"
   exit 1
 fi
 
@@ -57,8 +57,8 @@ if [[ ! -f /boot/cmdline-custom ]] && [[ ! -f "/boot/cmdline-${kver}" ]]; then
     mv /boot/cmdline /boot/cmdline-custom
   
   else
-    echo "cmdline seems to be missing"
-    echo "Note. I will create one for you"
+    echo "cmdline seems to be missing."
+    echo "Note. I will create one for you."
 
     # -n prevents echo from adding new line at the end
     echo -n "console=tty1 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 quiet splash" > /boot/cmdline-custom
@@ -227,7 +227,7 @@ kflash(){
   elif [ -f /usr/local/bin/vtflash ];then
     /usr/local/bin/vtflash $kver yes
   else
-    echo "vtflash doesn't seem to be present, unable to automatically flash"
+    echo "vtflash does not seem to be present, unable to automatically flash."
   fi
 }
 
@@ -239,7 +239,7 @@ ktest(){
   elif [ -f /usr/local/bin/vttest ];then
     /usr/local/bin/vttest $kver yes
   else
-    echo "vttest doesn't seem to be present, unable to automatically flash"
+    echo "vttest does not seem to be present, unable to automatically flash."
   fi
 }
 

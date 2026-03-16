@@ -1,10 +1,10 @@
-Might be located at /etc/velvettools/dtbs or /boot/dtbs,
+Might be located in /etc/velvettools/dtbs or /boot/dtbs,
 you can create it yourself.
 
-inside, you can put stuff such as :
+Inside, you can put stuff such as :
 - "sc7180-trogdor-*.dtb" for multiple files that match the pattern.
-- "sc7180-trogdor-r1.dtb" for a single file (if you are sure that's the correct one).
+- "sc7180-trogdor-r1.dtb" for a single file (ensure it is the correct one).
 
 Note. Each dtb seems to add, more or less, 0.09 MiB to an image size.
 Note. All of the available dtbs are located at /boot/dtb-(version)/
-Tip. You can try to figure out the correct one with "cat /proc/device-tree/model"
+Tip. You can try to figure out the correct one with "cat /proc/device-tree/model".

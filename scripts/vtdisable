@@ -1,5 +1,5 @@
 #!/bin/bash
-# makes partition unbootable
+# makes partitions unbootable
 
 source $(dirname $BASH_SOURCE)/vtcommon
 source $(dirname $BASH_SOURCE)/vtcommon-flash
@@ -10,7 +10,7 @@ need_root
 if [ $# == "1" ]; then
     get_partid_kpart_and_pdisk_from_drive $1
 else
-    echo "you have to specify a drive to disable"
+    echo "You have to specify the drive to disable."
 fi
 
 echo "Are you sure you want to make ${kpart}${id} unbootable ?"
