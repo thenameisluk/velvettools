@@ -85,9 +85,8 @@ get_root_parameter(){
     echo "using Label as root identifier"
     ROOT_PARAMETER="root=LABEL=$(lsblk -d -no LABEL ${ROOT_DEVICE})"
   elif [ "$(lsblk -no UUID ${ROOT_DEVICE})" != "" ];then
-    ROOT_PARA
-    METER="root=UUID=$(lsblk -d -no UUID ${ROOT_DEVICE})"
     echo "using UUID as root identifier"
+    ROOT_PARAMETER="root=UUID=$(lsblk -d -no UUID ${ROOT_DEVICE})"
   else
     echo "WARNING. the script was unable to determine the partition label or uuid of the device."
     echo "Since CUSTOM_ROOT_PARAMETER was not provided"
