@@ -56,21 +56,21 @@ if [ "$DEVICE" == "" ];then
         fi
 
         echo "Usage: vtinstall [--luks] <device> [shut]"
-        echo
+        echo ""
         echo "Options:"
         echo "  --luks    Enable LUKS encryption on the root partition"
         echo "  --no-boot-partition    Do not create a separate /boot partition"
         echo "  shut      Suppress prompts and verbose output"
-        echo
+        echo ""
         echo "Examples:"
         echo "  vtinstall mmcblk0                 # Standard installation"
         echo "  vtinstall --luks mmcblk0          # Installation with LUKS encryption"
         echo "  vtinstall mmcblk0 shut            # Silent installation"
         echo "  vtinstall --luks mmcblk0 shut     # Silent LUKS installation"
-        echo
+        echo ""
         echo "Possible installation devices:"
         valid_devices_ex
-        echo
+        echo ""
         exit 0
     fi
 
@@ -97,12 +97,12 @@ fi
 need_root
 
 if [ "${SHUT}" == "" ];then
-    echo "the selected device $TARGET is going to be wiped"
-    echo "this operation CANNOT BE UNDONE."
-    echo "if you have any sensitive data present on this device"
-    echo "please back it up before proceeding"
-    echo
-    echo "would you like to continue?"
+    echo "The selected device $TARGET is going to be wiped."
+    echo "This operation CANNOT BE UNDONE."
+    echo "If you have any sensitive data present on this device"
+    echo "please back it up before proceeding."
+    echo ""
+    echo "Would you like to continue ?"
     need_confirmation 
 fi
 
@@ -240,7 +240,7 @@ if [ "$USE_LUKS" == "yes" ]; then
     
 else
     echo "[info] build kernel partition"
-    echo CUSTOM_ROOT_DEVICE=\"${TARGET_PART}${ROOT_PART_NUM}\" NO_FLASH=\"yes\" CUSTOM_PREFIX=\"install-\" $(dirname $BASH_SOURCE)/vtbuild
+    echo "CUSTOM_ROOT_DEVICE=\"${TARGET_PART}${ROOT_PART_NUM}\" NO_FLASH=\"yes\" CUSTOM_PREFIX=\"install-\" $(dirname $BASH_SOURCE)/vtbuild"
     CUSTOM_ROOT_DEVICE="${TARGET_PART}${ROOT_PART_NUM}" NO_FLASH="yes" CUSTOM_PREFIX="install-" $(dirname $BASH_SOURCE)/vtbuild
     
     get_kver
@@ -283,10 +283,10 @@ if [ "$USE_LUKS" == "yes" ]; then
 fi
 
 if [ "$USE_LUKS" == "yes" ] && [ "${SHUT}" == "" ]; then
-    echo
     echo "[info] LUKS installation was completed successfully!"
+    echo ""
     echo "The root partition is now encrypted and the system is configured to"
     echo "unlock it at boot time. You will be prompted for your passphrase"
     echo "during boot. Make sure to remember your passphrase!"
-    echo
+    echo ""
 fi

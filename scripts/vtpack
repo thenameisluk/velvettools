@@ -27,7 +27,7 @@ make_deb(){
         echo "PATCHING $file"
 
         if [ "$file" != "linux-${kver}/DEBIAN/control" ];then
-            echo "making executable"
+            echo "making it executable."
             chmod +x $file
         fi
 
@@ -36,7 +36,7 @@ make_deb(){
         sed -i "s/MAINTAINER/$1/g" $file
     done
 
-    echo "this might take a while, please be patient"
+    echo "this might take a while, please be patient."
     dpkg-deb --root-owner-group --build linux-${kver}
 
     rm -rf linux-${kver}

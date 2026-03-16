@@ -3,20 +3,19 @@ set -e #exit on error
 
 if [[ $1 == "help" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]];then
 
-  echo usage vtbuild \<kernel version\>
-
-  echo available environment variables
-  echo
-  echo CUSTOM_PARAMETER=\"\" custom parameters to be appended
-  echo
-  echo CUSTOM_ROOT_DEVICE=\"\" specify custom root device
-  echo CUSTOM_ROOT_PARAMETER=\"\" directly specify root kernel parameter \(has priority over custom root\)
-  echo example: \"root=LABEL=name\" \"root=UUID=uuid\" \"root=/dev/sdx\"
-  echo
-  echo NO_FLASH= any value other than empty prevents automatic/forced flashing
-  echo
-  echo CUSTOM_PREFIX="" prefix to be added to image name
-  echo CUSTOM_SUFFIX="" suffix to be added to image name
+  echo "usage vtbuild \<kernel version\>"
+  echo "available environment variables"
+  echo ""
+  echo "CUSTOM_PARAMETER=\"\" custom parameters to be appended."
+  echo ""
+  echo "CUSTOM_ROOT_DEVICE=\"\" specify custom root device."
+  echo "CUSTOM_ROOT_PARAMETER=\"\" directly specify root kernel parameter \(has priority over custom root\)."
+  echo "example: \"root=LABEL=name\" \"root=UUID=uuid\" \"root=/dev/sdx\""
+  echo ""
+  echo "NO_FLASH= any value other than empty prevents automatic/forced flashing."
+  echo ""
+  echo "CUSTOM_PREFIX=\"\" prefix to be added to image name."
+  echo "CUSTOM_SUFFIX=\"\" suffix to be added to image name."
   exit
 
 fi
@@ -54,7 +53,7 @@ fi
 if [[ ! -f /boot/cmdline-custom ]] && [[ ! -f "/boot/cmdline-${kver}" ]]; then
 
   if [ -f /boot/cmdline ];then
-    echo migrating old cmdline
+    echo "migrating old cmdline."
     mv /boot/cmdline /boot/cmdline-custom
   
   else
@@ -80,19 +79,19 @@ echo WORKING_DIR=\"${WORKING_DIR}\"
 
 get_root_parameter(){
   ROOT_DEVICE=$1
-  echo ROOT_DEVICE=$ROOT_DEVICE
+  echo "ROOT_DEVICE=$ROOT_DEVICE"
 
   if [ "$(lsblk -no LABEL ${ROOT_DEVICE})" != "" ];then 
-    echo using Label as root identifier
+    echo "using Label as root identifier"
     ROOT_PARAMETER="root=LABEL=$(lsblk -d -no LABEL ${ROOT_DEVICE})"
   elif [ "$(lsblk -no UUID ${ROOT_DEVICE})" != "" ];then
-    echo using UUID as root identifier
     ROOT_PARA
     METER="root=UUID=$(lsblk -d -no UUID ${ROOT_DEVICE})"
+    echo "using UUID as root identifier"
   else
-    echo WARNING. the script was unable to determine the partition label or uuid of the device
-    echo since CUSTOM_ROOT_PARAMETER was not provided
-    echo the script will default to the device absolute path as root instead which is NOT RELIABLE
+    echo "WARNING. the script was unable to determine the partition label or uuid of the device."
+    echo "Since CUSTOM_ROOT_PARAMETER was not provided"
+    echo "the script will default to the device absolute path as root instead which is NOT RELIABLE."
 
     ROOT_PARAMETER="root=$ROOT_DEVICE"
     sleep 10
@@ -107,16 +106,16 @@ elif [ "${CUSTOM_ROOT_DEVICE}" != "" ];then
 elif [ "$(findmnt -n -o SOURCE /)" != "" ];then
   get_root_parameter "$(findmnt -n -o SOURCE /)" # /dev/mmcblk1p4 or similar
 else
-  echo ERROR. unable to detect root device
-  echo this may occur due to an incorrectly set up chroot
-  echo aborting the build process
+  echo "ERROR. unable to detect the root device."
+  echo "This may occur due to an incorrectly set up chroot"
+  echo "aborting the build process."
 
   exit 2
 fi
 
 
 # generating the final cmdline
-echo
+echo ""
 echo -n "${ROOT_PARAMETER} " > cmdline;
 
 if [ -f /boot/cmdline-${kver} ];then
@@ -140,7 +139,7 @@ echo -n " KERNEL_HASH=${KERNEL_HASH}" >> cmdline
 echo -n "cmdline used : "
 cat cmdline
 
-echo
+echo ""
 # check out the cmdline
 sleep 5
 
@@ -186,7 +185,7 @@ fi
 if [ "$dtbs_file" == "" ]; then
   ls /boot/dtb-${kver}/*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lzma -a 0 -d Image.lzma -i initrd.img.xz kernel.itb || out_of_memory
 else
-  echo going with $dtbs_file
+  echo "going with $dtbs_file"
   echo "the dtbs picked :"
 
   ls /boot/dtb-${kver}/$(cat $dtbs_file)
@@ -205,13 +204,13 @@ rmdir $WORKING_DIR
 # final output
 
 # printing results
-echo image put inside "/boot/${CUSTOM_PREFIX}vmlinux.kpart-initrd-${kver}${CUSTOM_SUFFIX}"
+echo "image put inside \"/boot/${CUSTOM_PREFIX}vmlinux.kpart-initrd-${kver}${CUSTOM_SUFFIX}\""
 
 if [ "$CUSTOM_PREFIX" != "" ] || [ "$CUSTOM_SUFFIX" != "" ];then
   exit
 fi
 
-echo $KERNEL_HASH > /boot/hash-${kver}
+echo "$KERNEL_HASH" > /boot/hash-${kver}
 
 if [ "${NO_FLASH}" != "" ]; then
   exit 0
@@ -245,17 +244,17 @@ ktest(){
 }
 
 if [ "$flash" == "auto" ]; then
-  echo automatic flashing
+  echo "automatic flashing"
   if [ "$kver" == "$(uname -r)" ];then
     kflash
   else
     ktest
-    echo the kernel will be permanently flashed after it successfully boots,
-    echo to prevent it, remove /etc/velvettools/testing
-    echo -n $kver > /etc/velvettools/testing
+    echo "the kernel will be permanently flashed after it successfully boots,"
+    echo "to prevent this, remove /etc/velvettools/testing"
+    echo -n "$kver" > /etc/velvettools/testing
   fi
 elif [ "$flash" == "forced" ];then
-  echo forced main flashing
+  echo "forced main flashing"
   kflash
 else # manual
   echo ""

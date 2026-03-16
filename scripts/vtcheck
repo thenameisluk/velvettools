@@ -7,7 +7,7 @@ need_root
 get_kver
 
 if [ ! -f "/boot/hash-${kver}" ];then
-    echo no hash to check against
+    echo "no hash to check against"
     exit 0
 fi
 
@@ -15,10 +15,10 @@ echo "file:$(cat /boot/hash-${kver})"
 echo "kernel:$(get_kparam KERNEL_HASH)"
 
 if [ "$(cat /boot/hash-${kver})" == "$(get_kparam KERNEL_HASH)" ];then
-    echo hash match
+    echo "hash match !"
     rm /boot/hash-${kver}
     vtflash $(uname -r) yes
     exit
 fi
 
-echo hash mismatch
+echo "hash mismatch"

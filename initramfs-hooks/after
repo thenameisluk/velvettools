@@ -5,7 +5,7 @@ if [ "$init_gen_hook" != "y" ];then
 fi
 
 unknown_error(){
-  echo WARNING. something went wrong while building the image please be careful while flashing it.
+  echo "WARNING. Something went wrong while building the image, please be careful while flashing it."
   exit 1
 }
 
