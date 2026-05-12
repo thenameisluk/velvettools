@@ -3,6 +3,7 @@
 
 - ```vtlist``` lists available kernel versions
 - ```vtbuild <version>``` builds a bootable image
+- ```vtremove <version>``` removes a bootable image
 - ```vtflash <version> </dev/diskname>``` flashes an image permanently
 - ```vttest <version> </dev/diskname>``` flashes an image for testing purposes
 - ```vtdisable </dev/diskname>``` makes partition unbootable
@@ -77,6 +78,7 @@ deb/
     │       ├── vthelp
     │       ├── vtlist
     │       ├── vtpack
+    │       ├── vtremove
     │       └── vttest
     └── share
         └── velvettools
