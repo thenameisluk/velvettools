@@ -99,3 +99,18 @@ hash_file(){
     FILE=$1
     md5sum $FILE | cut -c -32 -n
 }
+
+check_boot_space(){
+    local file=$1
+    local required=$(du -sb "$file" | cut -f1)
+    local available=$(df -B1 /boot | awk 'NR==2 {print $4}')
+
+    if [ "$available" -lt "$required" ]; then
+        echo "insufficient space on /boot to finalize kernel install."
+        echo "  required : ${required} bytes"
+        echo "  available: ${available} bytes"
+        echo "the build is preserved at: $(dirname $file)"
+        echo "free up space with vtremove and move it manually, or rebuild once space is available."
+        exit 1
+    fi
+}
