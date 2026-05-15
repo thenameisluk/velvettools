@@ -1,0 +1,92 @@
+#!/bin/bash
+set -e #exit on error
+
+if [[ $1 == "help" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]];then
+
+  echo "usage: vtremove <kernel version>"
+  echo ""
+  echo "removes an installed kernel and its associated files."
+  echo "the currently running kernel will not be removed."
+  echo ""
+  echo "the following files and directories will be removed if present:"
+  echo "  /boot/Image-<version>"
+  echo "  /boot/initrd.img-<version>"
+  echo "  /boot/config-<version>"
+  echo "  /boot/System.map-<version>"
+  echo "  /boot/vmlinux.kpart-<version>"
+  echo "  /boot/vmlinux.kpart-initrd-<version>"
+  echo "  /boot/vmlinux.kpart-initrd-<version>.old"
+  echo "  /boot/dtb-<version>/"
+  echo "  /boot/hash-<version>"
+  echo "  /lib/modules/<version>/"
+  echo ""
+  echo "use vtlist to see installed kernels."
+  exit
+
+fi
+
+source $(dirname $BASH_SOURCE)/vtcommon
+
+need_root
+
+# choosing a kernel version
+get_kver "${1}"
+
+# refuse to remove the running kernel
+if [[ "$kver" == "$(uname -r)" ]];then
+  echo "refusing to remove the currently running kernel ($kver)."
+  echo "boot into a different kernel first, then try again."
+  exit 1
+fi
+
+# check there is actually something to remove
+if [ ! -f "/boot/Image-${kver}" ] && [ ! -f "/boot/vmlinux.kpart-initrd-${kver}" ] && [ ! -d "/boot/dtb-${kver}" ] && [ ! -d "/lib/modules/${kver}" ];then
+  echo "kernel ${kver} does not appear to be installed."
+  echo "use vtlist to see installed kernels."
+  exit 1
+fi
+
+echo "the following will be removed for kernel ${kver}:"
+echo ""
+
+[ -f "/boot/Image-${kver}" ]                        && echo "  /boot/Image-${kver}"
+[ -f "/boot/initrd.img-${kver}" ]                   && echo "  /boot/initrd.img-${kver}"
+[ -f "/boot/System.map-${kver}" ]                   && echo "  /boot/System.map-${kver}"
+[ -f "/boot/config-${kver}" ]                       && echo "  /boot/config-${kver}"
+[ -f "/boot/vmlinux.kpart-${kver}" ]                && echo "  /boot/vmlinux.kpart-${kver}"
+[ -f "/boot/vmlinux.kpart-initrd-${kver}" ]         && echo "  /boot/vmlinux.kpart-initrd-${kver}"
+[ -f "/boot/vmlinux.kpart-initrd-${kver}.old" ]     && echo "  /boot/vmlinux.kpart-initrd-${kver}.old"
+[ -d "/boot/dtb-${kver}" ]                          && echo "  /boot/dtb-${kver}/"
+[ -f "/boot/hash-${kver}" ]                         && echo "  /boot/hash-${kver}"
+[ -d "/lib/modules/${kver}" ]                       && echo "  /lib/modules/${kver}/"
+
+echo ""
+
+need_confirmation
+
+# remove kernel image files
+rm -fv "/boot/Image-${kver}"
+rm -fv "/boot/initrd.img-${kver}"
+rm -fv "/boot/System.map-${kver}"
+rm -fv "/boot/config-${kver}"
+rm -fv "/boot/vmlinux.kpart-${kver}"
+rm -fv "/boot/vmlinux.kpart-initrd-${kver}"
+rm -fv "/boot/vmlinux.kpart-initrd-${kver}.old"
+
+# remove dtbs
+rm -rfv "/boot/dtb-${kver}"
+
+# remove hash (cmdline-${kver} is intentionally kept)
+rm -fv "/boot/hash-${kver}"
+
+# remove modules
+rm -rfv "/lib/modules/${kver}"
+
+# clear testing flag if it was set for this kernel
+if [ -f /etc/velvettools/testing ] && [ "$(cat /etc/velvettools/testing)" == "$kver" ];then
+  echo "clearing testing flag for ${kver}"
+  rm -f /etc/velvettools/testing
+fi
+
+echo ""
+echo "kernel ${kver} removed."

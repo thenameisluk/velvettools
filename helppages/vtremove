@@ -1,0 +1,10 @@
+Usage vtremove <version>
+is used to remove an installed kernel and its associated files.
+
+The currently running kernel will not be removed.
+Boot into a different kernel first, then retry.
+
+Use vtlist to see installed kernels.
+Use vtremove to free up space on /boot before building a new kernel.
+
+<optional>

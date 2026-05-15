@@ -90,6 +90,20 @@ _vt_build_completion() {
 }
 complete -F _vt_build_completion vtbuild
 
+# vtremove
+_vt_remove_completion() {
+    local curr_arg="${COMP_WORDS[COMP_CWORD]}"
+
+    local options=""
+
+    if [ "$COMP_CWORD" == "1" ];then
+        options=$(get_available_kernel_versions)
+    fi
+
+    COMPREPLY=($(compgen -W "$options" -- "$curr_arg"))
+}
+complete -F _vt_remove_completion vtremove
+
 # vthelp
 _vt_help_completion() {
     local curr_arg="${COMP_WORDS[COMP_CWORD]}"
