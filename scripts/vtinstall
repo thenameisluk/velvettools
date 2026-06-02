@@ -275,7 +275,7 @@ mkdir -p /mnt/etc/systemd/system/multi-user.target.wants
 # delete random-seed and machine-id according to https://systemd.io/BUILDING_IMAGES/
 # so that they get created unique per machine on first boot
 # inspired by: https://github.com/armbian/build/pull/3774
-echo "uninitialized" > etc/machine-id
+echo "uninitialized" > /mnt/etc/machine-id
 rm -f /mnt/var/lib/systemd/random-seed /mnt/var/lib/dbus/machine-id
 
 if [ "$USE_LUKS" == "yes" ]; then
