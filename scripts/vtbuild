@@ -29,7 +29,7 @@ get_kver "${1}"
 
 # it is better to regenerate the initramfs every time
 if [ ! -f "/boot/initrd.img-${kver}" ]; then
-  
+
   touch /boot/norebuild # prevents initramfs from running vtbuild again
 
   if [ "$2" == "noinitgen" ]; then
@@ -38,16 +38,24 @@ if [ ! -f "/boot/initrd.img-${kver}" ]; then
   fi
 
   echo "initrd.img-${kver} seems to be missing, trying to generate one for you."
-  update-initramfs -c -k "${kver}"
+
+  INITRD_TMP="/tmp/vt-initrd-${kver}"
+  mkdir -p "${INITRD_TMP}"
+  update-initramfs -c -k "${kver}" -b "${INITRD_TMP}"
 
   rm -f /boot/norebuild 2> /dev/null
-fi
 
-if [ ! -f "/boot/initrd.img-${kver}" ]; then
-  echo "Sorry. I was unable to generate an initramfs. TwT"
-  exit 1
-fi
+  if [ ! -f "${INITRD_TMP}/initrd.img-${kver}" ]; then
+    echo "Sorry, I was unable to generate an initramfs."
+    rm -rf "${INITRD_TMP}"
+    exit 1
+  fi
 
+  check_boot_space "${INITRD_TMP}/initrd.img-${kver}"
+  mv "${INITRD_TMP}/initrd.img-${kver}" /boot/initrd.img-${kver}
+  rm -rf "${INITRD_TMP}"
+
+fi
 
 # fallback to generated/old cmdline
 if [[ ! -f /boot/cmdline-custom ]] && [[ ! -f "/boot/cmdline-${kver}" ]]; then
